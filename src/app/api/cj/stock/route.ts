@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
 import { updateStockByVariantIds } from "@/lib/cjStock";
+import { cjClient } from "@/lib/cj";
 
 export async function POST(req: NextRequest) {
   try {
@@ -55,8 +56,11 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    type VariantRow = { cjVariantId: string } & Record<string, unknown>;
-    const variantIds = (product.variants as VariantRow[]).map((v) => v.cjVariantId);
+    const variantIds: string[] = [];
+    for (const v of product.variants as Array<Record<string, unknown>>) {
+      const id = (v as any).cjVariantId as string | undefined;
+      if (typeof id === 'string' && id.length > 0) variantIds.push(id);
+    }
 
     if (variantIds.length === 0) {
       return NextResponse.json({
