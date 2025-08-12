@@ -55,7 +55,8 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const variantIds = product.variants.map(v => v.cjVariantId);
+    type VariantRow = { cjVariantId: string } & Record<string, unknown>;
+    const variantIds = (product.variants as VariantRow[]).map((v) => v.cjVariantId);
 
     if (variantIds.length === 0) {
       return NextResponse.json({
@@ -70,7 +71,7 @@ export async function GET(req: NextRequest) {
     const stockData = stockResponse?.data?.list || [];
 
     // Mapear dados de estoque para as variantes
-    const updatedVariants = product.variants.map(variant => {
+    const updatedVariants = product.variants.map((variant: any) => {
       const stockItem = stockData.find((s: any) => String((s.vid || s.variantId)) === variant.cjVariantId);
       return {
         ...variant,
