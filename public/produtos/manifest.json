@@ -1,0 +1,82 @@
+{
+  "1": [
+    "/produtos/produto-1/10_42ce7439-fc58-4ea3-9c61-658d8d5c6fc4.jpg",
+    "/produtos/produto-1/1_8b4295f8-307c-46e3-9c58-2abc72045b8c.jpg",
+    "/produtos/produto-1/2_e41c7718-bfd7-4082-910c-6697d42ccf23.jpg",
+    "/produtos/produto-1/3_14edac94-7871-4f0d-a8e4-7eee5f659c03.jpg",
+    "/produtos/produto-1/4_b164a8c8-372d-4022-bc24-114181613a16.jpg",
+    "/produtos/produto-1/5_63e0a0f7-c14c-4b42-8d35-a08d3f2449bf.jpg",
+    "/produtos/produto-1/6_0164e664-9ee8-484d-bbed-0ef93eb83008.jpg",
+    "/produtos/produto-1/7_fbda6aef-c177-4707-a285-438cce3e46f3.jpg",
+    "/produtos/produto-1/8_6a488463-84b4-4f4e-b33e-f05003ce8852.jpg",
+    "/produtos/produto-1/9_09b4aa11-3589-46c1-86e1-82c2fe1b4d19.jpg"
+  ],
+  "2": [
+    "/produtos/produto-2/1_d4d6e8ea-7d5d-4442-bfaa-6c924225dd8c.jpg",
+    "/produtos/produto-2/2_8dfdf74b-1d23-4abc-ac21-2448ac170b81.jpg",
+    "/produtos/produto-2/3_553025cd-d159-4846-b8fd-d0724766bdb2.jpg",
+    "/produtos/produto-2/4_c837d4fa-6c59-46d8-a51e-63a6e928be0a.jpg",
+    "/produtos/produto-2/5_92c9859f-79c3-4910-ae59-97339ea54a73.jpg",
+    "/produtos/produto-2/6_987ea921-dcc7-45a5-aa8f-e3888fa90c01.jpg",
+    "/produtos/produto-2/7_fedfd919-025f-4b58-ae50-cf2f80e91795.jpg",
+    "/produtos/produto-2/8_197b9355-5ddc-47cb-8616-7c77642c72b3.jpg"
+  ],
+  "3": [
+    "/produtos/produto-3/1_262b7683-9325-4138-b494-dfcd1b58c692.jpg",
+    "/produtos/produto-3/2_02a8383f-6ee5-4ef7-84e1-5ddd40f91bbc.jpg",
+    "/produtos/produto-3/3_a64e8d83-57d2-4ed4-9a4e-110f700e9803.jpg",
+    "/produtos/produto-3/4_bad68585-13ea-4ec4-b0c1-ea474987872f.jpg",
+    "/produtos/produto-3/5_d27fc9f8-dbf6-4729-ba42-d7ca6287021f.jpg",
+    "/produtos/produto-3/6_43cb9483-2d18-4838-857a-a703f4fa0eda.jpg",
+    "/produtos/produto-3/7_d3b8392f-f427-41a3-9299-80bdb74d66e6.jpg",
+    "/produtos/produto-3/8_8434b7fd-9ddc-45a2-b911-d01d3abbf9e0.jpg"
+  ],
+  "4": [
+    "/produtos/produto-4/10_5262d093-76c7-42c6-98da-6aef8f6332b0.jpg",
+    "/produtos/produto-4/11_f427a867-666c-45ab-a15a-ffdeaf2bebb1.jpg",
+    "/produtos/produto-4/12_f9608fd9-fd2e-440f-a136-882c42d1ffb4.jpg",
+    "/produtos/produto-4/13_c2876d34-0632-4327-bd8a-e4b81bad3b38.jpg",
+    "/produtos/produto-4/14_53cff7af-300d-49d8-8ef3-ff7c41589b60.jpg",
+    "/produtos/produto-4/15_55264ba6-8ba8-445d-bc9c-6c3599a7f480.jpg",
+    "/produtos/produto-4/16_8ca513c6-57ea-4f76-9f22-094cfea9f3bb.jpg",
+    "/produtos/produto-4/17_cf5b3118-dd40-4cdc-953c-00a436cef0e8.jpg",
+    "/produtos/produto-4/18_1c124301-7e7a-443a-9e83-ceca7903f8fc.jpg",
+    "/produtos/produto-4/19_c0a32b09-6cac-4436-950f-02736569890c.jpg",
+    "/produtos/produto-4/1_3581f772-d674-4f66-aa87-237dc2678474.jpg",
+    "/produtos/produto-4/20_335e14e2-e24f-4755-8793-7a7d275103e0.jpg",
+    "/produtos/produto-4/21_927c6235-124a-4fdd-9f85-fff43c79d808.jpg",
+    "/produtos/produto-4/2_f28c894d-956d-4e06-9b7e-53289b9f9f40.jpg",
+    "/produtos/produto-4/3_881c4b24-6135-4947-a072-8c762a4e80e7.jpg",
+    "/produtos/produto-4/4_53bf5963-8031-4ad1-96b2-fd8ef30806a0.jpg",
+    "/produtos/produto-4/5_873075dd-c52b-4f1f-92dd-ed537f1918ef.jpg",
+    "/produtos/produto-4/6_a9500e19-84e6-4e30-a671-3d34e07c30a5.jpg",
+    "/produtos/produto-4/7_956b6bfa-62e2-4731-a4f4-698b765ed5f4.jpg",
+    "/produtos/produto-4/8_d2791717-1da0-4f4a-a232-6b275c1909e8.jpg",
+    "/produtos/produto-4/9_3a4d3a23-5669-49b1-9065-9db9c30527f5.jpg"
+  ],
+  "5": [
+    "/produtos/produto-5/1_16440352-268a-4fe1-8fe0-e5e828a71795.jpg",
+    "/produtos/produto-5/2_3dbb998f-b151-470d-9949-611a720ceb94.jpg",
+    "/produtos/produto-5/3_6d5c39b5-68d7-41ae-bab1-76c4504975b4.jpg",
+    "/produtos/produto-5/4_0d23d37d-4d75-4b63-9079-8babac15685b.jpg",
+    "/produtos/produto-5/5_23391032-5b2f-4b48-a574-d4b86c2dfedd.jpg",
+    "/produtos/produto-5/6_a4976c29-83b3-4bf4-b9fc-659aec3f765f.jpg",
+    "/produtos/produto-5/7_69f067d3-8c4c-437d-b417-de088abb2fe6.jpg"
+  ],
+  "6": [
+    "/produtos/produto-6/10_9eeced68-14ae-4f73-99b3-3afd742b72f1.jpg",
+    "/produtos/produto-6/11_dd846f9c-5970-47ed-b712-8ef97869450e.jpg",
+    "/produtos/produto-6/12_fff04c30-d87d-4561-83f0-92ef2bab67ab.jpg",
+    "/produtos/produto-6/13_4354decb-39d2-4c76-b385-dc12ee17f1c3.jpg",
+    "/produtos/produto-6/14_a6101b2e-ab02-40f8-a64b-0d62b96d8d53.jpg",
+    "/produtos/produto-6/1_71f024eb-dde7-481c-9a13-e713ef6ad449.jpg",
+    "/produtos/produto-6/2_62172b7e-4c70-4384-a715-e18b0dcc0f90.jpg",
+    "/produtos/produto-6/3_89b095f3-51c1-476a-a445-62e4756226df.jpg",
+    "/produtos/produto-6/4_78ae7975-4cae-4877-9faf-148d63f0121a.jpg",
+    "/produtos/produto-6/5_88d96af0-ecd0-474b-9eeb-1765aa51c915.jpg",
+    "/produtos/produto-6/6_b06f1707-8f40-4120-962a-a95faaa0f09c.jpg",
+    "/produtos/produto-6/7_f04ac772-1a6a-4abf-a52c-74128dae1cb1.jpg",
+    "/produtos/produto-6/8_c7aa711b-6f06-47d6-bae2-d3157054bb40.jpg",
+    "/produtos/produto-6/9_a622cecd-994f-4dc1-966d-27623b83c33c.jpg"
+  ]
+}

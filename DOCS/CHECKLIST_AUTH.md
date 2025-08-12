@@ -1,0 +1,12 @@
+## CHECKLIST AUTH (rodar antes de cada alteração)
+- [ ] Rotas criadas/atualizadas: /signup, /login, /forgot, /reset, /callback, /onboarding, /account
+- [ ] Supabase Auth: email/senha + Google (provider + redirect URLs)
+- [ ] Fluxo "esqueci a senha": page /forgot + /reset funcional
+- [ ] Onboarding pós-login: coleta de endereço obrigatório
+- [ ] Tabelas e RLS aplicadas (profiles, addresses)
+- [ ] Policies atualizadas (select/update by owner)
+- [ ] Edge cases: sessão expirada, email não verificado, erro de OAuth
+- [ ] E-mails: templates de confirmação e reset (subject + links)
+- [ ] .env.example atualizado (SUPABASE_URL, ANON_KEY, SITE_URL)
+- [ ] Testes: e2e para signup/login/forgot/reset/onboarding/logout
+- [ ] Scripts: `make plan` (local) e `make apply` (remoto) executados
