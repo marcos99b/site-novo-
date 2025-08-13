@@ -853,23 +853,17 @@ section, .card-elegant, .hero-elegant, .products-grid, .max-w-7xl, .max-w-6xl, .
   box-shadow: 0 2px 6px rgba(212,175,55,0.35);
 }
 
-/* Linha sutil sob títulos – opcional para reforço de luxo */
+/* Linha sutil sob títulos – sem sobrepor descendentes (g/p), usa underline nativa */
 .underline-aurum {
   position: relative;
   display: inline-block;
+  text-decoration-line: underline;
+  text-decoration-color: rgba(247,231,206,0.7);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 10px; /* não distancia demais, mas afasta da cauda */
+  text-decoration-skip-ink: auto; /* pula descendentes como g/p */
 }
-.underline-aurum::after {
-  content: '';
-  position: absolute;
-  left: 10%;
-  right: 10%;
-  bottom: -24px; /* afastar mais da cauda de letras como g/p */
-  height: 2px;
-  background: linear-gradient(90deg, rgba(255,255,255,0), rgba(247,231,206,0.7), rgba(255,255,255,0));
-  filter: blur(0.4px);
-  pointer-events: none;
-  z-index: -1; /* garante que a linha fique atrás do texto */
-}
+.underline-aurum::after { content: none !important; }
 
 /* Selo 3D do herói (melhor legibilidade sobre imagem) */
 .hero-badge-3d {
