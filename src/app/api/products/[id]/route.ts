@@ -88,9 +88,9 @@ export async function GET(
       compare_at_price: product.priceMax,
       images: product.images,
       category: product.category,
-      stock: product.variants.reduce((sum, v) => sum + v.stock, 0),
-      available: product.variants.some(v => v.stock > 0),
-      variants: product.variants.map(variant => ({
+      stock: product.variants.reduce((sum: number, v: { stock: number }) => sum + (v?.stock || 0), 0),
+      available: product.variants.some((v: { stock: number }) => (v?.stock || 0) > 0),
+      variants: product.variants.map((variant: any) => ({
         id: variant.id,
         sku: variant.sku,
         price: variant.price,
