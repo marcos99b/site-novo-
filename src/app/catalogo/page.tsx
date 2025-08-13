@@ -106,11 +106,10 @@ export default function CatalogoPage() {
             {filteredProducts.map((p, idx) => (
               <div key={p.id} className="group animate-slide-up" style={{ animationDelay: `${idx * 0.1}s` }}>
                 <Link href={`/produto/${p.id}`} className="block pointer-events-auto">
-                <div className={`card-elegant card-precision ${idx % 3 === 0 ? 'card-precision--a' : idx % 3 === 1 ? 'card-precision--b' : 'card-precision--c'} p-5 sm:p-7 lg:p-8 transition-all duration-500`}>
-                  <div className="card-3d-plate"></div>
+                <div className={`card-nike p-5 sm:p-7 lg:p-8 transition-all duration-500`}>
                   <div className="floor-shadow"></div>
                   <div
-                    className="relative w-full h-72 sm:h-80 lg:h-96 mb-6 sm:mb-8 overflow-hidden media-precision tilt-3d"
+                    className="relative w-full h-72 sm:h-80 lg:h-96 mb-6 sm:mb-8 overflow-hidden media-nike tilt-3d"
                     onMouseMove={(e) => {
                       const target = e.currentTarget as HTMLElement;
                       const rect = target.getBoundingClientRect();
@@ -142,17 +141,17 @@ export default function CatalogoPage() {
                     </div>
                   </div>
                   <div className="space-y-4">
-                     <h3 className="font-royal text-xl sm:text-2xl font-semibold text-gold-warm truncate-2-no-ellipsis leading-tight group-hover:text-gold-warm transition-colors">{p.name}</h3>
+                     <h3 className="font-royal text-xl sm:text-2xl font-semibold title-nike truncate-2-no-ellipsis leading-tight">{p.name}</h3>
                      {/* Descrição ocultada para layout mais organizado e foco no título/visual */}
                     <div className="flex items-center justify-between pt-4">
-                      <span className="text-xl sm:text-2xl font-semibold text-[#1a1a1a] card-3d-price">{formatEUR(p.price)}</span>
+                      <span className="text-xl sm:text-2xl font-semibold price-nike">{formatEUR(p.price)}</span>
                       {p.compare_at_price > p.price && (
-                        <span className="text-base sm:text-lg text-[#1a1a1a]/50 line-through">{formatEUR(p.compare_at_price)}</span>
+                        <span className="text-base sm:text-lg compare-nike line-through">{formatEUR(p.compare_at_price)}</span>
                       )}
                     </div>
                     <div className="flex gap-3 sm:gap-4 pt-6">
-                      <button type="button" onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleAddToCart(p); }} className="flex-1 btn-primary py-3 sm:py-4 pointer-events-auto">Adicionar</button>
-                      <span className="flex-1 btn-secondary-dark text-center py-3 sm:py-4">Detalhes</span>
+                      <button type="button" onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleAddToCart(p); }} className="flex-1 btn-nike py-3 sm:py-4 pointer-events-auto">Adicionar</button>
+                      <span className="flex-1 btn-nike-ghost text-center py-3 sm:py-4">Detalhes</span>
                     </div>
                   </div>
                 </div>

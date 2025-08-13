@@ -1166,6 +1166,79 @@ p { line-height: 1.7; }
 /* Tipografia dentro do cartão claro */
 .card-quantum .card-3d-price { color: #111827; text-shadow: none; }
 
+/* ====== Card NIKE-STYLE (coeso, escuro, técnico) ====== */
+.card-nike {
+  --cut: 14px;
+  position: relative;
+  background: linear-gradient(180deg, #0d1117, #0b0f14 60%, #0a0e13);
+  border: 1px solid rgba(120,255,210,0.16);
+  color: #e6edf3;
+  clip-path: polygon(
+    var(--cut) 0,
+    calc(100% - var(--cut)) 0,
+    100% var(--cut),
+    100% calc(100% - var(--cut)),
+    calc(100% - var(--cut)) 100%,
+    var(--cut) 100%,
+    0 calc(100% - var(--cut)),
+    0 var(--cut)
+  );
+  box-shadow:
+    0 18px 46px rgba(0,0,0,0.45),
+    inset 0 1px 0 rgba(255,255,255,0.06);
+  transition: transform 380ms cubic-bezier(.22,1,.36,1), box-shadow 380ms ease;
+}
+.card-nike:hover { transform: translateY(-6px); box-shadow: 0 26px 64px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.08); }
+.card-nike::after { /* linhas técnicas leves */
+  content: '';
+  position: absolute; inset: 0; pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(88,199,255,0.12), rgba(88,199,255,0) 25%, rgba(88,199,255,0) 75%, rgba(88,199,255,0.12)),
+    linear-gradient(0deg, rgba(120,255,210,0.10), rgba(120,255,210,0) 25%, rgba(120,255,210,0) 75%, rgba(120,255,210,0.10));
+  opacity: .5; mix-blend-mode: soft-light;
+}
+
+.media-nike {
+  position: relative;
+  overflow: hidden;
+  background: #0b1118;
+  border: 1px solid rgba(120,255,210,0.14);
+}
+.media-nike .neon-grid { opacity: .4; }
+.media-nike .holo-sheen { opacity: .35; filter: blur(14px); }
+.media-nike .edge-light { box-shadow: inset 0 0 0 1px rgba(120,255,210,0.16); }
+
+/* Movimento sutil pan/zoom com tilt */
+.tilt-3d-inner img {
+  transition: transform 360ms cubic-bezier(.22,1,.36,1), filter 280ms ease;
+  transform: translate3d(calc(var(--px, 0) * 6px), calc(var(--py, 0) * 6px), 0) scale(1.04);
+}
+.tilt-3d:hover .tilt-3d-inner img { filter: saturate(1.03) contrast(1.02); }
+
+/* Tipografia e preços no card escuro */
+.title-nike { color: #e6edf3; }
+.price-nike { color: #f5f7fa; text-shadow: 0 1px 0 rgba(0,0,0,0.5); }
+.compare-nike { color: rgba(230,237,243,0.55); }
+
+/* Botões alinhados com a paleta */
+.btn-nike {
+  background: linear-gradient(180deg, #161b22, #0f141b);
+  color: #e6edf3;
+  border: 1px solid rgba(120,255,210,0.16);
+  border-radius: 10px;
+  box-shadow: 0 10px 24px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.06);
+  transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
+}
+.btn-nike:hover { transform: translateY(-2px); filter: brightness(1.04); }
+.btn-nike-ghost {
+  background: transparent;
+  color: #e6edf3;
+  border: 1px solid rgba(230,237,243,0.18);
+  border-radius: 10px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.05);
+}
+.btn-nike-ghost:hover { background: rgba(230,237,243,0.05); }
+
 /* ====== Card PRECISION (inspirado em Nike By You) – cantos chanfrados, sem arredondar ====== */
 .card-precision {
   --cut: 16px;
