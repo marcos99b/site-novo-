@@ -568,14 +568,14 @@ body::before {
 .badge-elegant {
   display: inline-block;
   padding: 6px 16px;
-  background: var(--gradient-champagne);
-  color: var(--brand-text);
-  border-radius: 24px;
+  background: linear-gradient(180deg, #ffffff 0%, #f6f8fb 100%);
+  color: #111827; /* texto escuro para máximo contraste */
+  border-radius: 9999px;
   font-size: 12px;
-  font-weight: 600;
-  border: 1px solid var(--brand-champagne);
-  box-shadow: 0 2px 8px rgba(247, 231, 206, 0.3);
-  transition: all 0.3s ease;
+  font-weight: 700;
+  border: 1px solid rgba(17,24,39,0.12);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.16), inset 0 1px 0 rgba(255,255,255,0.65);
+  transition: all 0.2s ease;
 }
 
 .badge-elegant:hover {
