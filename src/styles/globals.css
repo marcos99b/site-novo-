@@ -1033,3 +1033,210 @@ p { line-height: 1.7; }
 .feature-desc { color: #4b5563; font-size: 13px; }
 
 
+
+/* ====== Catálogo: cartão 3D tecnológico sofisticado ====== */
+.card-3d-tech {
+  position: relative;
+  border-radius: 24px;
+  background: linear-gradient(180deg, rgba(16,20,28,0.6), rgba(16,20,28,0.3));
+  border: 1px solid rgba(255,255,255,0.12);
+  box-shadow:
+    0 20px 40px rgba(0,0,0,0.30),
+    inset 0 1px 0 rgba(255,255,255,0.12),
+    inset 0 -1px 0 rgba(0,0,0,0.15);
+  transform-style: preserve-3d;
+  transition: transform 500ms cubic-bezier(.2,.8,.2,1), box-shadow 500ms, background 500ms;
+  backdrop-filter: blur(16px) saturate(120%);
+}
+.card-3d-tech:hover {
+  transform: translateY(-6px) rotateX(2deg) rotateY(-2deg) scale(1.01);
+  box-shadow:
+    0 30px 60px rgba(0,0,0,0.45),
+    inset 0 1px 0 rgba(255,255,255,0.18),
+    inset 0 -1px 0 rgba(0,0,0,0.2);
+}
+.card-3d-plate {
+  position: absolute;
+  inset: -1px;
+  border-radius: 24px;
+  background:
+    radial-gradient(1200px 200px at 20% -10%, rgba(88,199,255,0.14), transparent 60%),
+    radial-gradient(1200px 200px at 80% 110%, rgba(120,255,210,0.10), transparent 60%);
+  pointer-events: none;
+  transform: translateZ(20px);
+}
+.card-3d-media {
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  background: radial-gradient(120% 120% at 50% 0%, rgba(40,60,80,0.25), rgba(16,20,28,0.25));
+  border: 1px solid rgba(255,255,255,0.12);
+}
+.card-3d-price { color: #f6f6f6; text-shadow: 0 1px 0 rgba(0,0,0,0.6); }
+
+/* Tilt 3D interativo para a mídia */
+.tilt-3d { perspective: 1000px; transform-style: preserve-3d; }
+.tilt-3d-inner {
+  transform-style: preserve-3d;
+  transition: transform 450ms cubic-bezier(.22,1,.36,1), filter 300ms ease;
+  transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) translateZ(0);
+}
+.neon-grid {
+  position: absolute; inset: 0; pointer-events: none;
+  background:
+    repeating-linear-gradient(0deg, rgba(120,255,210,0.06) 0 1px, transparent 1px 24px),
+    repeating-linear-gradient(90deg, rgba(88,199,255,0.06) 0 1px, transparent 1px 24px);
+  mix-blend-mode: screen;
+  opacity: .65;
+  transform: translateZ(10px);
+  animation: gridFlow 10s linear infinite;
+}
+@keyframes gridFlow { to { background-position: 0 240px, 240px 0; } }
+
+.holo-sheen {
+  position: absolute; inset: -40%  -40%  -40%  -40%; pointer-events: none;
+  background: conic-gradient(from 210deg at 50% 50%, rgba(120,255,210,0.05), rgba(88,199,255,0.08), rgba(255,255,255,0.03), rgba(120,255,210,0.05));
+  mix-blend-mode: screen; filter: blur(18px); opacity: .6;
+  transform: translateZ(12px) rotate(var(--rz, 0deg));
+  animation: sheenSpin 18s linear infinite;
+}
+@keyframes sheenSpin { to { transform: translateZ(12px) rotate(360deg); } }
+
+.edge-light {
+  position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+  box-shadow: inset 0 0 0 1px rgba(120,255,210,0.22), inset 0 0 20px rgba(88,199,255,0.12);
+}
+
+/* ====== Cartão QUANTUM: contraste e sofisticação extrema ====== */
+.card-quantum {
+  position: relative;
+  border-radius: 26px;
+  /* painel de titânio claro para alto contraste no fundo escuro */
+  background: linear-gradient(180deg, rgba(246,248,252,0.98), rgba(234,238,243,0.96));
+  backdrop-filter: blur(18px) saturate(130%);
+  border: 1px solid rgba(17,24,39,0.08);
+  box-shadow:
+    0 28px 60px rgba(0,0,0,0.45),
+    0 10px 28px rgba(0,0,0,0.22),
+    inset 0 1px 0 rgba(255,255,255,0.65),
+    inset 0 -1px 0 rgba(17,24,39,0.06);
+}
+.card-quantum::before { /* glow externo suave para separar do fundo */
+  content: '';
+  position: absolute; inset: -8px; border-radius: 30px; pointer-events: none;
+  background: radial-gradient(60% 40% at 50% 0%, rgba(120,255,210,0.2), transparent 70%);
+  filter: blur(18px); opacity: .45;
+}
+.card-quantum::after { /* anel de borda com gradiente animado */
+  content: '';
+  position: absolute; inset: -1px; border-radius: 28px; pointer-events: none;
+  background: conic-gradient(from 200deg,
+    rgba(120,255,210,0.55), rgba(88,199,255,0.55), rgba(255,255,255,0.30), rgba(120,255,210,0.55));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+  padding: 2px; opacity: .9; filter: blur(.2px);
+  animation: ringSpin 10s linear infinite;
+}
+@keyframes ringSpin { to { transform: rotate(360deg); } }
+.card-quantum .floor-shadow { /* sombra de chão aumenta separação do fundo */
+  content: '';
+  position: absolute; left: 8%; right: 8%; bottom: -18px; height: 36px;
+  background: radial-gradient(60% 100% at 50% 0%, rgba(0,0,0,0.55), transparent 70%);
+  filter: blur(12px); pointer-events: none; border-radius: 50%;
+}
+.media-quantum {
+  position: relative; border-radius: 18px; overflow: hidden;
+  background: #0b1118; border: 1px solid rgba(120,255,210,0.15);
+  box-shadow: inset 0 0 40px rgba(88,199,255,0.10);
+}
+.media-quantum .corner-glow { /* glows diagonais discretos */
+  position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(600px 300px at -10% -10%, rgba(120,255,210,0.22), transparent 60%),
+    radial-gradient(600px 300px at 110% 110%, rgba(88,199,255,0.20), transparent 60%);
+  mix-blend-mode: screen; opacity: .8;
+}
+.media-quantum .specular { /* brilho especular dinâmico */
+  position: absolute; inset: -40% -60% -40% -60%; pointer-events: none;
+  background: linear-gradient(100deg, rgba(255,255,255,0.12), rgba(255,255,255,0.0));
+  transform: rotate(12deg);
+  opacity: .35; filter: blur(18px);
+}
+
+/* Tipografia dentro do cartão claro */
+.card-quantum .card-3d-price { color: #111827; text-shadow: none; }
+
+/* ====== Card PRECISION (inspirado em Nike By You) – cantos chanfrados, sem arredondar ====== */
+.card-precision {
+  --cut: 16px;
+  position: relative;
+  background: linear-gradient(180deg, rgba(246,248,252,0.98), rgba(234,238,243,0.96));
+  border: 1px solid rgba(17,24,39,0.08);
+  box-shadow:
+    0 24px 56px rgba(0,0,0,0.36),
+    inset 0 1px 0 rgba(255,255,255,0.65);
+  clip-path: polygon(
+    var(--cut) 0,
+    calc(100% - var(--cut)) 0,
+    100% var(--cut),
+    100% calc(100% - var(--cut)),
+    calc(100% - var(--cut)) 100%,
+    var(--cut) 100%,
+    0 calc(100% - var(--cut)),
+    0 var(--cut)
+  );
+  transition: transform 420ms cubic-bezier(.22,1,.36,1), box-shadow 420ms ease, background 420ms ease;
+}
+.card-precision::after { /* filete técnico nas bordas */
+  content: '';
+  position: absolute; inset: 0; pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(255,255,255,0.35), rgba(255,255,255,0) 20%, rgba(255,255,255,0) 80%, rgba(255,255,255,0.35)),
+    linear-gradient(0deg, rgba(255,255,255,0.35), rgba(255,255,255,0) 20%, rgba(255,255,255,0) 80%, rgba(255,255,255,0.35));
+  opacity: .6;
+  mix-blend-mode: soft-light;
+}
+.card-precision:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 34px 70px rgba(0,0,0,0.42), inset 0 1px 0 rgba(255,255,255,0.7);
+}
+/* Variações A/B/C */
+.card-precision--a { /* Titanium Light */
+  background: linear-gradient(180deg, #f8fafc, #e9edf3);
+  border-color: rgba(17,24,39,0.08);
+}
+.card-precision--b { /* Obsidian Neon */
+  background: linear-gradient(180deg, #0c1117, #0f141c 60%, #0b1118);
+  border-color: rgba(120,255,210,0.18);
+  box-shadow:
+    0 26px 60px rgba(0,0,0,0.5),
+    inset 0 1px 0 rgba(255,255,255,0.08);
+}
+.card-precision--c { /* Glass Prism */
+  background: linear-gradient(180deg, rgba(248,250,252,.96), rgba(240,246,255,.96));
+  border-color: rgba(17,24,39,0.08);
+  box-shadow:
+    0 28px 64px rgba(0,0,0,0.38),
+    inset 0 1px 0 rgba(255,255,255,0.7);
+}
+
+.floor-shadow { /* compatível com novo card */
+  position: absolute;
+  bottom: -18px; left: 8%; right: 8%; height: 36px;
+  background: radial-gradient(60% 100% at 50% 0%, rgba(0,0,0,0.55), transparent 70%);
+  filter: blur(12px); border-radius: 50%; pointer-events: none;
+}
+
+.media-precision {
+  position: relative;
+  overflow: hidden;
+  background: #0b1118;
+  border: 1px solid rgba(120,255,210,0.14);
+}
+
+/* Movimento sutil de pan/zoom na imagem, guiado por variáveis do mouse */
+.tilt-3d-inner img {
+  transition: transform 450ms cubic-bezier(.22,1,.36,1);
+  transform: translate3d(calc(var(--px, 0) * 8px), calc(var(--py, 0) * 8px), 0) scale(1.06);
+}
+

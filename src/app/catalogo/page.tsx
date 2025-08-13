@@ -106,9 +106,37 @@ export default function CatalogoPage() {
             {filteredProducts.map((p, idx) => (
               <div key={p.id} className="group animate-slide-up" style={{ animationDelay: `${idx * 0.1}s` }}>
                 <Link href={`/produto/${p.id}`} className="block pointer-events-auto">
-                <div className="card-elegant p-5 sm:p-7 lg:p-8 hover:scale-[1.02] transition-all duration-500">
-                  <div className="relative w-full h-72 sm:h-80 lg:h-96 bg-[#faf9f6] rounded-2xl mb-6 sm:mb-8 overflow-hidden">
-                    <ProductImage src={p.images?.[0]?.src || `/cj/${p.id}/img-1.jpg`} alt={p.images?.[0]?.alt || p.name} />
+                <div className={`card-elegant card-precision ${idx % 3 === 0 ? 'card-precision--a' : idx % 3 === 1 ? 'card-precision--b' : 'card-precision--c'} p-5 sm:p-7 lg:p-8 transition-all duration-500`}>
+                  <div className="card-3d-plate"></div>
+                  <div className="floor-shadow"></div>
+                  <div
+                    className="relative w-full h-72 sm:h-80 lg:h-96 mb-6 sm:mb-8 overflow-hidden media-precision tilt-3d"
+                    onMouseMove={(e) => {
+                      const target = e.currentTarget as HTMLElement;
+                      const rect = target.getBoundingClientRect();
+                      const px = (e.clientX - rect.left) / rect.width;
+                      const py = (e.clientY - rect.top) / rect.height;
+                      const ry = (px - 0.5) * 10; // -5..5
+                      const rx = (0.5 - py) * 8;  // -4..4
+                      target.style.setProperty('--ry', ry + 'deg');
+                      target.style.setProperty('--rx', rx + 'deg');
+                      target.style.setProperty('--px', (px - 0.5).toString());
+                      target.style.setProperty('--py', (py - 0.5).toString());
+                    }}
+                    onMouseLeave={(e) => {
+                      const target = e.currentTarget as HTMLElement;
+                      target.style.setProperty('--ry', '0deg');
+                      target.style.setProperty('--rx', '0deg');
+                      target.style.setProperty('--px', '0');
+                      target.style.setProperty('--py', '0');
+                    }}
+                  >
+                    <div className="tilt-3d-inner absolute inset-0">
+                      <ProductImage src={p.images?.[0]?.src || `/cj/${p.id}/img-1.jpg`} alt={p.images?.[0]?.alt || p.name} />
+                      <div className="neon-grid" />
+                      <div className="holo-sheen" />
+                      <div className="edge-light" />
+                    </div>
                     <div className="absolute top-4 left-4">
                       <span className="badge-elegant text-xs px-4 py-2">{p.category || 'Moda Feminina'}</span>
                     </div>
@@ -117,7 +145,7 @@ export default function CatalogoPage() {
                      <h3 className="font-royal text-xl sm:text-2xl font-semibold text-gold-warm truncate-2-no-ellipsis leading-tight group-hover:text-gold-warm transition-colors">{p.name}</h3>
                      {/* Descrição ocultada para layout mais organizado e foco no título/visual */}
                     <div className="flex items-center justify-between pt-4">
-                      <span className="text-xl sm:text-2xl font-semibold text-[#1a1a1a]">{formatEUR(p.price)}</span>
+                      <span className="text-xl sm:text-2xl font-semibold text-[#1a1a1a] card-3d-price">{formatEUR(p.price)}</span>
                       {p.compare_at_price > p.price && (
                         <span className="text-base sm:text-lg text-[#1a1a1a]/50 line-through">{formatEUR(p.compare_at_price)}</span>
                       )}
