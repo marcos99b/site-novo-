@@ -44,7 +44,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Verificar se há produtos CJ válidos no pedido
-    const cjItems = order.items.filter(item => item.variant.cjVariantId);
+    const cjItems = order.items.filter((item: any) => item?.variant?.cjVariantId);
     if (cjItems.length === 0) {
       return NextResponse.json(
         { success: false, error: "Pedido não contém produtos da CJ Dropshipping" },
@@ -54,12 +54,12 @@ export async function POST(req: NextRequest) {
 
     // Verificar estoque local antes do pagamento
     try {
-      const stockCheck = cjItems.map((item) => {
+      const stockCheck = cjItems.map((item: any) => {
         return {
-          variantId: item.variant.cjVariantId,
-          requested: item.quantity,
-          available: item.variant.stock || 0,
-          name: item.variant.name
+          variantId: item?.variant?.cjVariantId,
+          requested: item?.quantity,
+          available: item?.variant?.stock || 0,
+          name: item?.variant?.name
         };
       });
 
