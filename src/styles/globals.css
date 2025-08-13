@@ -863,10 +863,12 @@ section, .card-elegant, .hero-elegant, .products-grid, .max-w-7xl, .max-w-6xl, .
   position: absolute;
   left: 10%;
   right: 10%;
-  bottom: -10px;
+  bottom: -16px; /* afastar da cauda de letras como g/p */
   height: 2px;
   background: linear-gradient(90deg, rgba(255,255,255,0), rgba(247,231,206,0.7), rgba(255,255,255,0));
   filter: blur(0.4px);
+  pointer-events: none;
+  z-index: -1; /* garante que a linha fique atrás do texto */
 }
 
 /* Selo 3D do herói (melhor legibilidade sobre imagem) */
