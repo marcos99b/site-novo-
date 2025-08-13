@@ -95,7 +95,7 @@ export default function Home() {
               <div className="absolute bottom-6 left-6 right-6 hero-badge-3d rounded-xl p-4">
                 <div className="text-center">
                   <div className="text-sm text-hero-3d tracking-wide">Coleção Atual</div>
-                  <div className="text-lg font-semibold text-hero-3d-strong">Outono 2024</div>
+                  <div className="text-lg font-semibold text-hero-3d-strong">Outono 2025</div>
                 </div>
               </div>
             </div>
