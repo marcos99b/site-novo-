@@ -6,7 +6,7 @@
   /* Paleta de Luxo Europeu - sofisticada e elegante */
   --brand-bg: #fefefe;
   --brand-surface: #ffffff;
-  --brand-text: #1a1a1a;
+  --brand-text: #f8fafc; /* texto claro para fundo escuro */
   --brand-muted: rgba(26, 26, 26, 0.7);
   --brand-border: rgba(26, 26, 26, 0.08);
   --brand-accent: #1a1a1a;

@@ -23,12 +23,12 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode; }) {
   return (
     <html lang="pt-PT">
-      <body className={`${inter.className} ${poppins.variable} min-h-screen app-bg text-[#1f1f1f]`}>
+      <body className={`${inter.className} ${poppins.variable} min-h-screen app-bg`}>
         <ParallaxBackground />
         <FacebookPixel pixelId={process.env.NEXT_PUBLIC_FACEBOOK_PIXEL_ID || '123456789'} />
         <Providers>
           <CartProvider>
-            <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-black/[0.06]">
+            <header className="sticky top-0 z-50 bg-white/80 text-black backdrop-blur-xl border-b border-black/[0.06]">
               <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
                 <BrandLogo />
                 <nav className="hidden md:flex items-center gap-6 text-[14px]">
