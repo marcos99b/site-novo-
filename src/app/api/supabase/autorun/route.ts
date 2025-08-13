@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from 'next/server';
 import { Client } from 'pg';
 import fs from 'fs/promises';
 import path from 'path';
-import fetch from 'node-fetch';
 
 export const runtime = 'nodejs';
 

@@ -104,16 +104,16 @@ export class UserTracker {
       // Monkey-patch pushState/replaceState
       const origPush = history.pushState;
       const origReplace = history.replaceState;
-      history.pushState = function(...args) {
-        const ret = origPush.apply(this, args as any);
+      history.pushState = ((...args: Parameters<History['pushState']>) => {
+        const ret = origPush.apply(history, args as unknown as any);
         try { handleRouteChange(); } catch {}
         return ret;
-      } as any;
-      history.replaceState = function(...args) {
-        const ret = origReplace.apply(this, args as any);
+      }) as typeof history.pushState;
+      history.replaceState = ((...args: Parameters<History['replaceState']>) => {
+        const ret = origReplace.apply(history, args as unknown as any);
         try { handleRouteChange(); } catch {}
         return ret;
-      } as any;
+      }) as typeof history.replaceState;
       window.addEventListener('popstate', () => {
         try { handleRouteChange(); } catch {}
       });
