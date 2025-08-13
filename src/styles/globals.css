@@ -1246,33 +1246,15 @@ p { line-height: 1.7; }
   gap: 10px; padding: 12px 20px;
   color: #ffffff; font-weight: 800; letter-spacing: .2px;
   background: linear-gradient(135deg, #e8d7a8 0%, var(--brand-gold-warm) 100%);
-  border: 0; border-radius: 10px;
+  border: 1px solid rgba(202,164,94,0.55); border-radius: 10px;
   box-shadow:
-    0 14px 32px rgba(212,175,55,0.28),
-    0 8px 22px rgba(232,215,168,0.25),
+    0 8px 18px rgba(212,175,55,0.18),
     inset 0 1px 0 rgba(255,255,255,0.7);
   transform: translateZ(0);
   transition: transform .22s cubic-bezier(.22,1,.36,1), box-shadow .22s ease, filter .22s ease;
 }
-.cta-primary::before { /* anel animado high-tech em dourado */
-  content: '';
-  position: absolute; inset: -1px; border-radius: 12px; padding: 2px; pointer-events: none;
-  background: conic-gradient(from 0deg, rgba(232,215,168,.9), rgba(202,164,94,.9), rgba(255,255,255,.35), rgba(232,215,168,.9));
-  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor; mask-composite: exclude;
-  animation: ctaRing 6s linear infinite;
-  opacity: .85; filter: blur(.25px);
-}
-@keyframes ctaRing { to { transform: rotate(360deg); } }
-.cta-primary::after { /* brilho que percorre */
-  content: '';
-  position: absolute; inset: -40% -20% -40% -20%; transform: rotate(18deg);
-  background: linear-gradient(90deg, rgba(255,255,255,.18), rgba(255,255,255,0));
-  filter: blur(14px); opacity: .0; pointer-events: none;
-  transition: opacity .25s ease;
-}
-.cta-primary:hover { transform: translateY(-2px) scale(1.02); filter: saturate(1.03) brightness(1.02); }
-.cta-primary:hover::after { opacity: .55; }
+.cta-primary::before, .cta-primary::after { content: none !important; }
+.cta-primary:hover { transform: translateY(-1px) scale(1.01); filter: none; }
 .cta-primary:active { transform: translateY(0) scale(.99); }
 .cta-primary:focus { outline: none; box-shadow: 0 0 0 3px rgba(232,215,168,0.35), 0 14px 32px rgba(212,175,55,0.28); }
 
