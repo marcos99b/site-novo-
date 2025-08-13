@@ -9,6 +9,7 @@ import LoginButton from '@/components/LoginButton';
 import Providers from '@/components/Providers';
 import BrandLogo from '@/components/BrandLogo';
 import ParallaxBackground from '@/components/ParallaxBackground';
+import dynamic from 'next/dynamic';
 
 const inter = Inter({ subsets: ['latin'] });
 const poppins = Poppins({ subsets: ['latin'], weight: ['300','400','500','600','700'], variable: '--font-poppins' });
@@ -21,6 +22,7 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode; }) {
+  const ChatWidget = dynamic(() => import('@/components/ChatWidget'), { ssr: false });
   return (
     <html lang="pt-PT">
       <body className={`${inter.className} ${poppins.variable} min-h-screen app-bg`}>
@@ -61,6 +63,7 @@ export default function RootLayout({ children }: { children: React.ReactNode; })
               </div>
               <div className="border-t border-black/[0.06] py-6 text-center text-black/60 text-[13px]"><p>&copy; 2024 Reliet. Todos os direitos reservados.</p></div>
             </footer>
+            <ChatWidget />
           </CartProvider>
         </Providers>
       </body>
