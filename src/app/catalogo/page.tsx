@@ -106,36 +106,9 @@ export default function CatalogoPage() {
             {filteredProducts.map((p, idx) => (
               <div key={p.id} className="group animate-slide-up" style={{ animationDelay: `${idx * 0.1}s` }}>
                 <Link href={`/produto/${p.id}`} className="block pointer-events-auto">
-                <div className={`card-atelier p-5 sm:p-7 lg:p-8 transition-all duration-500`}>
-                  <div className="floor-shadow"></div>
-                  <div
-                    className="relative w-full h-72 sm:h-80 lg:h-96 mb-6 sm:mb-8 overflow-hidden media-atelier tilt-3d"
-                    onMouseMove={(e) => {
-                      const target = e.currentTarget as HTMLElement;
-                      const rect = target.getBoundingClientRect();
-                      const px = (e.clientX - rect.left) / rect.width;
-                      const py = (e.clientY - rect.top) / rect.height;
-                      const ry = (px - 0.5) * 6; // suavizado
-                      const rx = (0.5 - py) * 4;  // suavizado
-                      target.style.setProperty('--ry', ry + 'deg');
-                      target.style.setProperty('--rx', rx + 'deg');
-                      target.style.setProperty('--px', (px - 0.5).toString());
-                      target.style.setProperty('--py', (py - 0.5).toString());
-                    }}
-                    onMouseLeave={(e) => {
-                      const target = e.currentTarget as HTMLElement;
-                      target.style.setProperty('--ry', '0deg');
-                      target.style.setProperty('--rx', '0deg');
-                      target.style.setProperty('--px', '0');
-                      target.style.setProperty('--py', '0');
-                    }}
-                  >
-                    <div className="tilt-3d-inner absolute inset-0">
-                      <ProductImage src={p.images?.[0]?.src || `/cj/${p.id}/img-1.jpg`} alt={p.images?.[0]?.alt || p.name} />
-                      <div className="neon-grid" />
-                      <div className="holo-sheen" />
-                      <div className="edge-light" />
-                    </div>
+                <div className={`card-atelier p-5 sm:p-7 lg:p-8 transition-all duration-300`}>
+                  <div className="relative w-full h-72 sm:h-80 lg:h-96 mb-6 sm:mb-8 overflow-hidden media-atelier">
+                    <ProductImage src={p.images?.[0]?.src || `/cj/${p.id}/img-1.jpg`} alt={p.images?.[0]?.alt || p.name} />
                     <div className="absolute top-4 left-4">
                       <span className="badge-elegant text-xs px-4 py-2">{p.category || 'Moda Feminina'}</span>
                     </div>
@@ -151,7 +124,7 @@ export default function CatalogoPage() {
                     </div>
                     <div className="flex gap-3 sm:gap-4 pt-6">
                       <button type="button" onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleAddToCart(p); }} className="flex-1 cta-primary pointer-events-auto">Adicionar</button>
-                      <span className="flex-1 cta-secondary text-center">Detalhes</span>
+                      <span className="flex-1 cta-secondary--dark text-center">Detalhes</span>
                     </div>
                   </div>
                 </div>

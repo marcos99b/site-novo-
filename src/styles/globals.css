@@ -1297,6 +1297,21 @@ p { line-height: 1.7; }
 .cta-secondary:focus { outline: none; box-shadow: 0 0 0 3px rgba(232,215,168,0.22); }
 .cta-secondary:hover::after { transform: translate3d(2px, -3px, 0); opacity: 1; }
 
+/* Variante dark para painéis claros */
+.cta-secondary--dark {
+  position: relative;
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 8px; padding: 12px 20px;
+  color: #1a1a1a; font-weight: 700; letter-spacing: .2px;
+  background: #f3f4f6;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 6px 16px rgba(17,24,39,0.06), inset 0 1px 0 rgba(255,255,255,0.6);
+  transition: transform .2s ease, background .2s ease, color .2s ease, border-color .2s ease;
+}
+.cta-secondary--dark:hover { background: #e5e7eb; transform: translateY(-2px); }
+.cta-secondary--dark:focus { outline: none; box-shadow: 0 0 0 3px rgba(232,215,168,0.22); }
+
 /* ====== Card ATELIER (sofisticado, feminino, PT) ====== */
 .card-atelier {
   --cut: 12px;
