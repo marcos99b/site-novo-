@@ -16,6 +16,48 @@ export async function POST(req: NextRequest) {
     let totalImported = 0;
     const results = [];
 
+    // Helpers para derivar cor da variante (usados em múltiplos trechos)
+    const toPtColor = (raw?: string | null) => {
+      const s = (raw || '').toString().toLowerCase();
+      const map: Array<[RegExp, string]> = [
+        [/\b(preto|black|noir|negro)\b/, 'Preto'],
+        [/\b(branco|white|blanc)\b/, 'Branco'],
+        [/\b(cinza|grey|gray|gris)\b/, 'Cinza'],
+        [/\b(bege|beige)\b/, 'Bege'],
+        [/\b(caqui|khaki)\b/, 'Caqui'],
+        [/\b(marfim|ivory|off\s*white)\b/, 'Marfim'],
+        [/\b(castanho|marrom|brown|coffee)\b/, 'Castanho'],
+        [/\b(azul|blue|navy)\b/, 'Azul'],
+        [/\b(verde|green|olive)\b/, 'Verde'],
+        [/\b(vermelho|red|rouge)\b/, 'Vermelho'],
+        [/\b(rosa|pink|rose)\b/, 'Rosa'],
+      ];
+      for (const [re, name] of map) if (re.test(s)) return name;
+      return null;
+    };
+
+    const readColorFromVariant = (variant: any): string | null => {
+      // tentativas em campos comuns
+      const direct = toPtColor(variant.color || variant.colour || variant.cor);
+      if (direct) return direct;
+      // chaves livres
+      const tryKeys = ['name','variantName','title','option','option1','option2','option3','sku','attr','attribute','attributes'];
+      for (const k of tryKeys) {
+        const v = (variant as any)[k];
+        if (!v) continue;
+        const c = toPtColor(typeof v === 'string' ? v : JSON.stringify(v));
+        if (c) return c;
+      }
+      // listas/pares
+      const lists = (variant.attributeList || variant.attributes || variant.props || variant.properties || []) as any[];
+      for (const item of lists) {
+        const val = typeof item === 'string' ? item : (item?.value || item?.val || item?.name || item?.key);
+        const c = toPtColor(val);
+        if (c) return c;
+      }
+      return null;
+    };
+
     // 0) Enriquecer variantes diretamente por VID, se informado
     if (vids.length > 0) {
       try {
@@ -107,46 +149,6 @@ export async function POST(req: NextRequest) {
             });
 
             // Processar variantes
-            const toPtColor = (raw?: string | null) => {
-              const s = (raw || '').toString().toLowerCase();
-              const map: Array<[RegExp, string]> = [
-                [/\b(preto|black|noir|negro)\b/, 'Preto'],
-                [/\b(branco|white|blanc)\b/, 'Branco'],
-                [/\b(cinza|grey|gray|gris)\b/, 'Cinza'],
-                [/\b(bege|beige)\b/, 'Bege'],
-                [/\b(caqui|khaki)\b/, 'Caqui'],
-                [/\b(marfim|ivory|off\s*white)\b/, 'Marfim'],
-                [/\b(castanho|marrom|brown|coffee)\b/, 'Castanho'],
-                [/\b(azul|blue|navy)\b/, 'Azul'],
-                [/\b(verde|green|olive)\b/, 'Verde'],
-                [/\b(vermelho|red|rouge)\b/, 'Vermelho'],
-                [/\b(rosa|pink|rose)\b/, 'Rosa'],
-              ];
-              for (const [re, name] of map) if (re.test(s)) return name;
-              return null;
-            };
-
-            const readColorFromVariant = (variant: any): string | null => {
-              // tentativas em campos comuns
-              const direct = toPtColor(variant.color || variant.colour || variant.cor);
-              if (direct) return direct;
-              // chaves livres
-              const tryKeys = ['name','variantName','title','option','option1','option2','option3','sku','attr','attribute','attributes'];
-              for (const k of tryKeys) {
-                const v = (variant as any)[k];
-                if (!v) continue;
-                const c = toPtColor(typeof v === 'string' ? v : JSON.stringify(v));
-                if (c) return c;
-              }
-              // listas/pares
-              const lists = (variant.attributeList || variant.attributes || variant.props || variant.properties || []) as any[];
-              for (const item of lists) {
-                const val = typeof item === 'string' ? item : (item?.value || item?.val || item?.name || item?.key);
-                const c = toPtColor(val);
-                if (c) return c;
-              }
-              return null;
-            };
             const variants = Array.isArray(product.variants) ? product.variants : 
                            Array.isArray(product.variantList) ? product.variantList : [];
             
