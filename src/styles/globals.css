@@ -1297,6 +1297,48 @@ p { line-height: 1.7; }
 .cta-secondary:focus { outline: none; box-shadow: 0 0 0 3px rgba(232,215,168,0.22); }
 .cta-secondary:hover::after { transform: translate3d(2px, -3px, 0); opacity: 1; }
 
+/* ====== Card ATELIER (sofisticado, feminino, PT) ====== */
+.card-atelier {
+  --cut: 12px;
+  position: relative;
+  background: linear-gradient(180deg, rgba(255,255,255,0.98), rgba(248,250,252,0.98));
+  border: 1px solid rgba(17,24,39,0.08);
+  clip-path: polygon(
+    var(--cut) 0,
+    calc(100% - var(--cut)) 0,
+    100% var(--cut),
+    100% calc(100% - var(--cut)),
+    calc(100% - var(--cut)) 100%,
+    var(--cut) 100%,
+    0 calc(100% - var(--cut)),
+    0 var(--cut)
+  );
+  box-shadow:
+    0 14px 40px rgba(0,0,0,0.16),
+    inset 0 1px 0 rgba(255,255,255,0.65);
+  transition: transform 300ms cubic-bezier(.22,1,.36,1), box-shadow 300ms ease;
+}
+.card-atelier:hover { transform: translateY(-4px); box-shadow: 0 22px 56px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.7); }
+
+.media-atelier {
+  position: relative;
+  overflow: hidden;
+  background: #faf9f6;
+  border: 1px solid rgba(17,24,39,0.08);
+}
+.media-atelier::after { /* brilho suave marfim */
+  content: '';
+  position: absolute; inset: -40% -20% -40% -20%; transform: rotate(16deg);
+  background: linear-gradient(90deg, rgba(255,255,255,0.2), rgba(255,255,255,0));
+  pointer-events: none; opacity: .0; filter: blur(14px);
+  transition: opacity .25s ease;
+}
+.media-atelier:hover::after { opacity: .35; }
+
+.title-atelier { color: #1a1a1a; }
+.price-atelier { color: #1a1a1a; }
+.compare-atelier { color: rgba(26,26,26,0.5); }
+
 /* ====== Card PRECISION (inspirado em Nike By You) – cantos chanfrados, sem arredondar ====== */
 .card-precision {
   --cut: 16px;

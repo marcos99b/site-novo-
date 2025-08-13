@@ -106,17 +106,17 @@ export default function CatalogoPage() {
             {filteredProducts.map((p, idx) => (
               <div key={p.id} className="group animate-slide-up" style={{ animationDelay: `${idx * 0.1}s` }}>
                 <Link href={`/produto/${p.id}`} className="block pointer-events-auto">
-                <div className={`card-nike p-5 sm:p-7 lg:p-8 transition-all duration-500`}>
+                <div className={`card-atelier p-5 sm:p-7 lg:p-8 transition-all duration-500`}>
                   <div className="floor-shadow"></div>
                   <div
-                    className="relative w-full h-72 sm:h-80 lg:h-96 mb-6 sm:mb-8 overflow-hidden media-nike tilt-3d"
+                    className="relative w-full h-72 sm:h-80 lg:h-96 mb-6 sm:mb-8 overflow-hidden media-atelier tilt-3d"
                     onMouseMove={(e) => {
                       const target = e.currentTarget as HTMLElement;
                       const rect = target.getBoundingClientRect();
                       const px = (e.clientX - rect.left) / rect.width;
                       const py = (e.clientY - rect.top) / rect.height;
-                      const ry = (px - 0.5) * 10; // -5..5
-                      const rx = (0.5 - py) * 8;  // -4..4
+                      const ry = (px - 0.5) * 6; // suavizado
+                      const rx = (0.5 - py) * 4;  // suavizado
                       target.style.setProperty('--ry', ry + 'deg');
                       target.style.setProperty('--rx', rx + 'deg');
                       target.style.setProperty('--px', (px - 0.5).toString());
@@ -141,12 +141,12 @@ export default function CatalogoPage() {
                     </div>
                   </div>
                   <div className="space-y-4">
-                     <h3 className="font-royal text-xl sm:text-2xl font-semibold title-nike truncate-2-no-ellipsis leading-tight">{p.name}</h3>
+                     <h3 className="font-royal text-xl sm:text-2xl font-semibold title-atelier truncate-2-no-ellipsis leading-tight">{p.name}</h3>
                      {/* Descrição ocultada para layout mais organizado e foco no título/visual */}
                     <div className="flex items-center justify-between pt-4">
-                      <span className="text-xl sm:text-2xl font-semibold price-nike">{formatEUR(p.price)}</span>
+                      <span className="text-xl sm:text-2xl font-semibold price-atelier">{formatEUR(p.price)}</span>
                       {p.compare_at_price > p.price && (
-                        <span className="text-base sm:text-lg compare-nike line-through">{formatEUR(p.compare_at_price)}</span>
+                        <span className="text-base sm:text-lg compare-atelier line-through">{formatEUR(p.compare_at_price)}</span>
                       )}
                     </div>
                     <div className="flex gap-3 sm:gap-4 pt-6">
