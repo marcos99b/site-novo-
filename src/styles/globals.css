@@ -1244,7 +1244,7 @@ p { line-height: 1.7; }
   position: relative;
   display: inline-flex; align-items: center; justify-content: center;
   gap: 10px; padding: 12px 20px;
-  color: #1a1a1a; font-weight: 800; letter-spacing: .2px;
+  color: #ffffff; font-weight: 800; letter-spacing: .2px;
   background: linear-gradient(135deg, #e8d7a8 0%, var(--brand-gold-warm) 100%);
   border: 0; border-radius: 10px;
   box-shadow:
@@ -1274,6 +1274,7 @@ p { line-height: 1.7; }
 .cta-primary:hover { transform: translateY(-2px) scale(1.02); filter: saturate(1.03) brightness(1.02); }
 .cta-primary:hover::after { opacity: .55; }
 .cta-primary:active { transform: translateY(0) scale(.99); }
+.cta-primary:focus { outline: none; box-shadow: 0 0 0 3px rgba(232,215,168,0.35), 0 14px 32px rgba(212,175,55,0.28); }
 
 .cta-secondary {
   position: relative;
@@ -1292,7 +1293,8 @@ p { line-height: 1.7; }
   transform: translate3d(0, -1px, 0);
   transition: transform .2s ease, opacity .2s ease;
 }
-.cta-secondary:hover { background: rgba(230,237,243,0.06); border-color: rgba(120,255,210,0.22); }
+.cta-secondary:hover { background: rgba(230,237,243,0.06); border-color: rgba(232,215,168,0.28); }
+.cta-secondary:focus { outline: none; box-shadow: 0 0 0 3px rgba(232,215,168,0.22); }
 .cta-secondary:hover::after { transform: translate3d(2px, -3px, 0); opacity: 1; }
 
 /* ====== Card PRECISION (inspirado em Nike By You) – cantos chanfrados, sem arredondar ====== */
