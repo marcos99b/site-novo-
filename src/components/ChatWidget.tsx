@@ -148,19 +148,19 @@ export default function ChatWidget() {
       )}
 
       {open && (
-        <div className="w-[320px] sm:w-[360px] bg-white rounded-2xl border border-black/10 shadow-3d-champagne overflow-hidden">
-          <div className="px-4 py-3 border-b border-black/10 flex items-center justify-between bg-white/80">
+        <div className="w-[380px] sm:w-[420px] bg-[#0f141b] rounded-2xl border border-white/10 shadow-3d-champagne overflow-hidden">
+          <div className="px-4 py-3 border-b border-white/10 flex items-center justify-between bg-white/5">
             <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-full bg-[#111827] grid place-items-center text-white text-[11px]">R</div>
-              <div className="font-medium text-[#111827]">Assistente Reliet</div>
+              <div className="w-7 h-7 rounded-full bg-white/90 grid place-items-center text-[#0f141b] text-[11px] font-bold">R</div>
+              <div className="font-medium text-white/95">Assistente Reliet</div>
             </div>
-            <button type="button" className="text-[#111827]/60 hover:text-[#111827] text-sm" onClick={() => setOpen(false)}>
+            <button type="button" className="text-white/60 hover:text-white text-sm" onClick={() => setOpen(false)}>
               Fechar
             </button>
           </div>
-          <div className="p-4 space-y-3 bg-[#f8fafc]">
+          <div className="p-4 space-y-3 max-h-[70vh] overflow-auto">
             {/* Mensagem inicial estilo bolha */}
-            <div className="max-w-[85%] bg-white border border-black/10 rounded-2xl rounded-tl-md p-3 text-sm text-[#111827] shadow-sm">
+            <div className="max-w-[85%] bg-white/10 border border-white/15 rounded-2xl rounded-tl-md p-3 text-sm text-white/95 shadow-sm">
               Olá! Sou o assistente da Reliet. Como posso ajudar?
             </div>
 
@@ -171,7 +171,7 @@ export default function ChatWidget() {
                     key={o.key}
                     type="button"
                     onClick={() => handleOpenTopic(o.key)}
-                    className="px-3 py-1.5 rounded-full border border-black/10 bg-white text-[#111827] text-sm hover:bg-[#eef2f6]"
+                    className="px-3 py-1.5 rounded-full border border-white/15 bg-white/10 text-white/95 text-sm hover:bg-white/15 hover:border-white/25"
                   >
                     {o.label}
                   </button>
@@ -179,15 +179,15 @@ export default function ChatWidget() {
               </div>
             ) : (
               <>
-                <div className="max-w-[85%] bg-white border border-black/10 rounded-2xl rounded-tl-md p-3 text-sm text-[#111827] shadow-sm">
+                <div className="max-w-[85%] bg-white/10 border border-white/15 rounded-2xl rounded-tl-md p-3 text-sm text-white/95 shadow-sm">
                   <div className="font-semibold mb-1">{topics[topic].title}</div>
                   <div className="space-y-2">{topics[topic].body}</div>
                 </div>
                 <div className="flex gap-2">
-                  <button type="button" className="px-3 py-1.5 rounded-full border border-black/10 bg-white text-[#111827] text-sm" onClick={() => setTopic('root')}>
+                  <button type="button" className="px-3 py-1.5 rounded-full border border-white/15 bg-white/10 text-white/95 text-sm hover:bg-white/15" onClick={() => setTopic('root')}>
                     Voltar
                   </button>
-                  <button type="button" className="px-3 py-1.5 rounded-full border border-black/10 bg-white text-[#111827] text-sm" onClick={() => setOpen(false)}>
+                  <button type="button" className="px-3 py-1.5 rounded-full border border-white/15 bg-white/10 text-white/95 text-sm hover:bg-white/15" onClick={() => setOpen(false)}>
                     Fechar
                   </button>
                 </div>
