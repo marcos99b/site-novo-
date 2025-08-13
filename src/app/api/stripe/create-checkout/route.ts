@@ -43,13 +43,22 @@ export async function POST(req: NextRequest) {
     }
 
     // Criar sessão de checkout do Stripe
-    // Idempotency por conteúdo do carrinho + currency (evita duplicar sessão)
-    const idemKey = crypto
-      .createHash('sha256')
-      .update(JSON.stringify({ items: line_items, currency }))
-      .digest('hex');
+    // Idempotency: incluir parâmetros relevantes (itens, moeda, rotas, métodos) para evitar conflito ao mudar configuração
+    const idemSeed = {
+      items: line_items.map(li => ({
+        q: li.quantity,
+        a: li.price_data?.unit_amount,
+        c: li.price_data?.currency,
+        n: li.price_data?.product_data?.name,
+      })),
+      currency,
+      successPath,
+      cancelPath,
+      payment_method_types: ['card', 'link'],
+    };
+    let idemKey = crypto.createHash('sha256').update(JSON.stringify(idemSeed)).digest('hex');
 
-    const session = await stripe.checkout.sessions.create({
+    const createParams: Stripe.Checkout.SessionCreateParams = {
       mode: 'payment',
       payment_method_types: ['card', 'link'],
       line_items,
@@ -61,7 +70,20 @@ export async function POST(req: NextRequest) {
         ...metadata,
         country: 'PT'
       }
-    }, { idempotencyKey: idemKey });
+    };
+
+    let session: Stripe.Checkout.Session;
+    try {
+      session = await stripe.checkout.sessions.create(createParams, { idempotencyKey: idemKey });
+    } catch (e: any) {
+      // Se mudar parâmetros e reutilizar a mesma key, o Stripe retorna erro. Regenerar uma vez e tentar novamente.
+      if (typeof e?.message === 'string' && e.message.includes('Keys for idempotent requests')) {
+        idemKey = crypto.createHash('sha256').update(JSON.stringify({ ...idemSeed, salt: Date.now() })).digest('hex');
+        session = await stripe.checkout.sessions.create(createParams, { idempotencyKey: idemKey });
+      } else {
+        throw e;
+      }
+    }
 
     // Registrar pedido pendente no Supabase (idempotente por stripe_session_id)
     try {
