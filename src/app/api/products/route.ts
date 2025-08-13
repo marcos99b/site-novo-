@@ -121,7 +121,7 @@ export async function GET(req: NextRequest) {
     };
 
     // 1) Pré-formatar com nomes candidatos (para evitar duplicados)
-    const pre = products.map((product) => {
+    const pre = products.map((product: any) => {
       const pid = String(product.id);
       const fromDb = Array.isArray(product.images) ? (product.images as any[]) : [];
       const fromManifest = (manifestImages[pid] || []).map((src: string) => ({ src }));
@@ -150,14 +150,14 @@ export async function GET(req: NextRequest) {
 
     // 2) Resolver duplicados distribuindo qualificadores; se persistir, adicionar sufixo elegante
     const nameToIndices = new Map<string, number[]>();
-    pre.forEach((p, idx) => {
+    pre.forEach((p: any, idx: number) => {
       const arr = nameToIndices.get(p.initialName) || [];
       arr.push(idx);
       nameToIndices.set(p.initialName, arr);
     });
 
     const roman = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII'];
-    const finalNames: string[] = pre.map(p => p.initialName);
+    const finalNames: string[] = pre.map((p: any) => p.initialName);
 
     for (const [name, indices] of nameToIndices.entries()) {
       if (indices.length <= 1) continue;
@@ -175,7 +175,7 @@ export async function GET(req: NextRequest) {
     }
 
     // 3) Montar resposta final
-    const formattedProducts = pre.map((entry, idx) => {
+    const formattedProducts = pre.map((entry: any, idx: number) => {
       const { product, mergedImages } = entry;
       return ({
         id: product.id,
@@ -187,10 +187,10 @@ export async function GET(req: NextRequest) {
         compare_at_price: product.priceMax,
         images: mergedImages.map((img: any) => (typeof img === 'string' ? { src: img } : img)),
         category: product.category,
-        stock: product.variants.reduce((sum, v) => sum + v.stock, 0),
-        available: product.variants.some((v) => v.stock > 0),
+        stock: product.variants.reduce((sum: number, v: { stock: number }) => sum + (v?.stock || 0), 0),
+        available: product.variants.some((v: { stock: number }) => (v?.stock || 0) > 0),
         featured: true,
-        variants: product.variants.map((variant) => ({
+        variants: product.variants.map((variant: any) => ({
           id: variant.id,
           sku: variant.sku,
           price: variant.price,
