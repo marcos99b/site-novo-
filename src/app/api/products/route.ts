@@ -120,6 +120,34 @@ export async function GET(req: NextRequest) {
       return name;
     };
 
+    // Se o banco estiver vazio, servir fallback usando o manifest local
+    if (!products || products.length === 0) {
+      const nowIso = new Date().toISOString();
+      const fallbackProducts = Object.entries(manifestImages).map(([pid, imgs]) => ({
+        id: pid,
+        name: `Peça ${pid}`,
+        slug: pid,
+        description: '',
+        short_description: '',
+        price: 0,
+        compare_at_price: 0,
+        images: (imgs as string[]).map((src) => ({ src })),
+        category: 'Coleção',
+        stock: 0,
+        available: true,
+        featured: true,
+        variants: [],
+        created_at: nowIso,
+        updated_at: nowIso,
+      }));
+      return new NextResponse(JSON.stringify({ products: fallbackProducts }), {
+        headers: {
+          'Content-Type': 'application/json',
+          'Cache-Control': 'public, max-age=60, s-maxage=120, stale-while-revalidate=300'
+        }
+      });
+    }
+
     // 1) Pré-formatar com nomes candidatos (para evitar duplicados)
     const pre = products.map((product: any) => {
       const pid = String(product.id);
@@ -210,7 +238,47 @@ export async function GET(req: NextRequest) {
     });
   } catch (error) {
     console.error('Erro ao buscar produtos:', error);
-    return NextResponse.json({ products: [] }, { status: 500 });
+    // Fallback em caso de erro: tentar manifest local
+    try {
+      const manifestPath = path.join(process.cwd(), 'public', 'produtos', 'manifest.json');
+      const raw = await fs.readFile(manifestPath, 'utf-8');
+      const parsed: any = JSON.parse(raw || '{}');
+      const manifestImages: Record<string, string[]> = {};
+      if (parsed && typeof parsed === 'object') {
+        for (const [key, value] of Object.entries(parsed)) {
+          if (Array.isArray(value)) manifestImages[String(key)] = value as string[];
+          else if (value && typeof value === 'object' && Array.isArray((value as any).images)) {
+            manifestImages[String(key)] = (value as any).images as string[];
+          }
+        }
+      }
+      const nowIso = new Date().toISOString();
+      const fallbackProducts = Object.entries(manifestImages).map(([pid, imgs]) => ({
+        id: pid,
+        name: `Peça ${pid}`,
+        slug: pid,
+        description: '',
+        short_description: '',
+        price: 0,
+        compare_at_price: 0,
+        images: (imgs as string[]).map((src) => ({ src })),
+        category: 'Coleção',
+        stock: 0,
+        available: true,
+        featured: true,
+        variants: [],
+        created_at: nowIso,
+        updated_at: nowIso,
+      }));
+      return new NextResponse(JSON.stringify({ products: fallbackProducts }), {
+        headers: {
+          'Content-Type': 'application/json',
+          'Cache-Control': 'public, max-age=60, s-maxage=120, stale-while-revalidate=300'
+        }
+      });
+    } catch (e) {
+      return NextResponse.json({ products: [] }, { status: 500 });
+    }
   }
 }
 

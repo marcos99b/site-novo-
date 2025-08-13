@@ -1,0 +1,9 @@
+{
+  "functions": {
+    "*": {
+      "regions": ["gru1"]
+    }
+  }
+}
+
+
