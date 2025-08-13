@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
         };
       });
 
-      const outOfStock = stockCheck.filter(item => item.requested > item.available);
+      const outOfStock = stockCheck.filter((item: any) => item.requested > item.available);
       if (outOfStock.length > 0) {
         return NextResponse.json(
           { 
