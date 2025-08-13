@@ -75,8 +75,34 @@ export async function POST(req: NextRequest) {
       }
     }
 
+    // Depois de aplicar o SQL, tentar disparar o sync da CJ automaticamente
+    let cjSync: { triggered: boolean; ok?: boolean; details?: any } = { triggered: false };
+    try {
+      // Só tenta se tivermos chave CJ em env (evita 401 desnecessário)
+      if (process.env.CJ_API_KEY) {
+        const proto = req.headers.get('x-forwarded-proto') || 'https';
+        const host = req.headers.get('host');
+        const baseFromReq = host ? `${proto}://${host}` : null;
+        const baseFromEnv = (process.env.NEXT_PUBLIC_SITE_URL || '').replace(/\/$/, '');
+        const siteBase = baseFromReq || baseFromEnv;
+        if (siteBase) {
+          cjSync.triggered = true;
+          const resp = await fetch(`${siteBase}/api/cj/sync`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ keywords: ['women coat','vest','top'], pageSize: 20, maxPages: 1 })
+          });
+          const data = await resp.json().catch(() => ({}));
+          cjSync.ok = resp.ok && (data?.success !== false);
+          cjSync.details = data;
+        }
+      }
+    } catch (e: any) {
+      cjSync = { triggered: true, ok: false, details: e?.message || 'Erro ao acionar sync CJ' };
+    }
+
     alreadyRan = true;
-    return NextResponse.json({ ok: true });
+    return NextResponse.json({ ok: true, cjSync });
   } catch (e: any) {
     return NextResponse.json({ ok: false, error: e?.message || 'Erro ao aplicar SQL' }, { status: 500 });
   }
