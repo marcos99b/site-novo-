@@ -82,11 +82,7 @@ export default function CatalogoPage() {
             <button
               key={category}
               onClick={() => setSelectedCategory(category)}
-              className={`px-4 py-2.5 sm:px-6 sm:py-3 rounded-xl text-sm font-medium transition-all duration-300 ${
-                selectedCategory === category
-                  ? 'bg-white text-[#1a1a1a] shadow-md sm:shadow-lg transform scale-[1.02] sm:scale-105'
-                  : 'bg-white/10 border border-white/20 text-white hover:bg-white/20 hover:border-white/30 hover:scale-[1.02] sm:hover:scale-105'
-              }`}
+              className={`chip-tech ${selectedCategory === category ? 'is-active' : ''}`}
             >
               {category}
             </button>

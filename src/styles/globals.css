@@ -1294,6 +1294,34 @@ p { line-height: 1.7; }
 .cta-secondary--dark:hover { background: #e5e7eb; transform: translateY(-2px); }
 .cta-secondary--dark:focus { outline: none; box-shadow: 0 0 0 3px rgba(232,215,168,0.22); }
 
+/* ====== Chips de filtro – tecnológicos e refinados (sem 3D) ====== */
+.chip-tech {
+  --cut: 10px;
+  position: relative;
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 10px 16px; gap: 8px;
+  font-weight: 600; letter-spacing: .2px; font-size: 0.9rem;
+  color: #e6edf3;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.18);
+  clip-path: polygon(var(--cut) 0, calc(100% - var(--cut)) 0, 100% var(--cut), 100% calc(100% - var(--cut)), calc(100% - var(--cut)) 100%, var(--cut) 100%, 0 calc(100% - var(--cut)), 0 var(--cut));
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition: background .2s ease, color .2s ease, border-color .2s ease, transform .2s ease;
+}
+.chip-tech:hover { background: rgba(255,255,255,0.10); transform: translateY(-1px); }
+.chip-tech:focus { outline: none; box-shadow: 0 0 0 2px rgba(232,215,168,0.24); }
+.chip-tech.is-active {
+  color: #111827;
+  background: linear-gradient(180deg, #ffffff, #f6f8fb);
+  border: 1px solid rgba(17,24,39,0.12);
+}
+.chip-tech.is-active::before {
+  content: '';
+  position: absolute; top: 0; left: 18px; right: 18px; height: 2px; pointer-events: none;
+  background: linear-gradient(90deg, rgba(232,215,168,0), rgba(232,215,168,0.9), rgba(232,215,168,0));
+}
+
 /* ====== Card ATELIER (sofisticado, feminino, PT) ====== */
 .card-atelier {
   --cut: 12px;
