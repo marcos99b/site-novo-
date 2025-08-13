@@ -6,6 +6,7 @@
     "dev": "next dev -p 3000",
     "build": "next build",
     "start": "next start -p 3000",
+    "postinstall": "prisma generate",
     "lint": "next lint",
     "supabase:autorun": "node scripts/supabase-autorun.js",
     "images:ingest": "node scripts/ingest-product-images.js",
