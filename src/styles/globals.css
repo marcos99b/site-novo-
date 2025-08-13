@@ -1239,6 +1239,62 @@ p { line-height: 1.7; }
 }
 .btn-nike-ghost:hover { background: rgba(230,237,243,0.05); }
 
+/* ====== CTAs SURPREENDENTES ====== */
+.cta-primary {
+  position: relative;
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 10px; padding: 12px 20px;
+  color: #061019; font-weight: 800; letter-spacing: .2px;
+  background: linear-gradient(135deg, #78ffd2 0%, #58c7ff 100%);
+  border: 0; border-radius: 10px;
+  box-shadow:
+    0 14px 32px rgba(120,255,210,0.25),
+    0 8px 22px rgba(88,199,255,0.18),
+    inset 0 1px 0 rgba(255,255,255,0.7);
+  transform: translateZ(0);
+  transition: transform .22s cubic-bezier(.22,1,.36,1), box-shadow .22s ease, filter .22s ease;
+}
+.cta-primary::before { /* anel animado high-tech */
+  content: '';
+  position: absolute; inset: -1px; border-radius: 12px; padding: 2px; pointer-events: none;
+  background: conic-gradient(from 0deg, rgba(120,255,210,.8), rgba(88,199,255,.8), rgba(255,255,255,.35), rgba(120,255,210,.8));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+  animation: ctaRing 6s linear infinite;
+  opacity: .85; filter: blur(.25px);
+}
+@keyframes ctaRing { to { transform: rotate(360deg); } }
+.cta-primary::after { /* brilho que percorre */
+  content: '';
+  position: absolute; inset: -40% -20% -40% -20%; transform: rotate(18deg);
+  background: linear-gradient(90deg, rgba(255,255,255,.18), rgba(255,255,255,0));
+  filter: blur(14px); opacity: .0; pointer-events: none;
+  transition: opacity .25s ease;
+}
+.cta-primary:hover { transform: translateY(-2px) scale(1.02); filter: saturate(1.05); }
+.cta-primary:hover::after { opacity: .55; }
+.cta-primary:active { transform: translateY(0) scale(.99); }
+
+.cta-secondary {
+  position: relative;
+  display: inline-flex; align-items: center; justify-content: center;
+  gap: 8px; padding: 12px 20px;
+  color: #e6edf3; font-weight: 700; letter-spacing: .2px;
+  background: transparent;
+  border-radius: 10px;
+  border: 1px solid rgba(230,237,243,0.22);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.06);
+  transition: transform .2s ease, background .2s ease, color .2s ease, border-color .2s ease;
+}
+.cta-secondary::after { /* seta dinâmica */
+  content: '↗';
+  font-size: 14px; line-height: 1; opacity: .8;
+  transform: translate3d(0, -1px, 0);
+  transition: transform .2s ease, opacity .2s ease;
+}
+.cta-secondary:hover { background: rgba(230,237,243,0.06); border-color: rgba(120,255,210,0.22); }
+.cta-secondary:hover::after { transform: translate3d(2px, -3px, 0); opacity: 1; }
+
 /* ====== Card PRECISION (inspirado em Nike By You) – cantos chanfrados, sem arredondar ====== */
 .card-precision {
   --cut: 16px;

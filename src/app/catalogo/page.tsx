@@ -150,8 +150,8 @@ export default function CatalogoPage() {
                       )}
                     </div>
                     <div className="flex gap-3 sm:gap-4 pt-6">
-                      <button type="button" onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleAddToCart(p); }} className="flex-1 btn-nike py-3 sm:py-4 pointer-events-auto">Adicionar</button>
-                      <span className="flex-1 btn-nike-ghost text-center py-3 sm:py-4">Detalhes</span>
+                      <button type="button" onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleAddToCart(p); }} className="flex-1 cta-primary pointer-events-auto">Adicionar</button>
+                      <span className="flex-1 cta-secondary text-center">Detalhes</span>
                     </div>
                   </div>
                 </div>
