@@ -134,47 +134,60 @@ export default function ChatWidget() {
         <button
           type="button"
           aria-label="Abrir chat"
-          className="shadow-3d-champagne bg-white/90 backdrop-blur-md border border-black/10 rounded-full px-5 py-3 text-sm font-semibold text-[#111827] hover:scale-[1.02] transition"
+          className="shadow-3d-champagne bg-white/95 backdrop-blur-md border border-black/10 rounded-full w-14 h-14 grid place-items-center text-[#111827] hover:scale-[1.06] transition"
           onClick={() => setOpen(true)}
         >
-          Precisa de ajuda?
+          {/* Emblema moderno de chat */}
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M21 12c0 4.418-4.03 8-9 8-1.01 0-1.98-.144-2.88-.41L4 21l1.51-3.02C4.56 16.85 4 14.99 4 13c0-4.418 4.03-8 9-8s8 3.582 8 7z" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/>
+            <circle cx="9" cy="12" r="1" fill="currentColor"/>
+            <circle cx="13" cy="12" r="1" fill="currentColor"/>
+            <circle cx="17" cy="12" r="1" fill="currentColor"/>
+          </svg>
         </button>
       )}
 
       {open && (
         <div className="w-[320px] sm:w-[360px] bg-white rounded-2xl border border-black/10 shadow-3d-champagne overflow-hidden">
-          <div className="px-4 py-3 border-b border-black/10 flex items-center justify-between">
-            <div className="font-medium text-[#111827]">Assistente Reliet</div>
+          <div className="px-4 py-3 border-b border-black/10 flex items-center justify-between bg-white/80">
+            <div className="flex items-center gap-2">
+              <div className="w-7 h-7 rounded-full bg-[#111827] grid place-items-center text-white text-[11px]">R</div>
+              <div className="font-medium text-[#111827]">Assistente Reliet</div>
+            </div>
             <button type="button" className="text-[#111827]/60 hover:text-[#111827] text-sm" onClick={() => setOpen(false)}>
               Fechar
             </button>
           </div>
-          <div className="p-4 space-y-4">
+          <div className="p-4 space-y-3 bg-[#f8fafc]">
+            {/* Mensagem inicial estilo bolha */}
+            <div className="max-w-[85%] bg-white border border-black/10 rounded-2xl rounded-tl-md p-3 text-sm text-[#111827] shadow-sm">
+              Olá! Sou o assistente da Reliet. Como posso ajudar?
+            </div>
+
             {topic === 'root' ? (
-              <>
-                <div className="text-sm text-[#111827]">Escolha uma opção:</div>
-                <div className="grid grid-cols-1 gap-2">
-                  {options.map((o) => (
-                    <button
-                      key={o.key}
-                      type="button"
-                      onClick={() => handleOpenTopic(o.key)}
-                      className="text-left px-3 py-2 rounded-lg border border-black/10 bg-white hover:bg-[#f8fafc] text-[#111827]"
-                    >
-                      {o.label}
-                    </button>
-                  ))}
-                </div>
-              </>
+              <div className="flex flex-wrap gap-2">
+                {options.map((o) => (
+                  <button
+                    key={o.key}
+                    type="button"
+                    onClick={() => handleOpenTopic(o.key)}
+                    className="px-3 py-1.5 rounded-full border border-black/10 bg-white text-[#111827] text-sm hover:bg-[#eef2f6]"
+                  >
+                    {o.label}
+                  </button>
+                ))}
+              </div>
             ) : (
               <>
-                <div className="text-sm font-semibold text-[#111827]">{topics[topic].title}</div>
-                <div>{topics[topic].body}</div>
-                <div className="pt-1 flex gap-2">
-                  <button type="button" className="px-3 py-2 rounded-lg border border-black/10 bg-white text-[#111827]" onClick={() => setTopic('root')}>
+                <div className="max-w-[85%] bg-white border border-black/10 rounded-2xl rounded-tl-md p-3 text-sm text-[#111827] shadow-sm">
+                  <div className="font-semibold mb-1">{topics[topic].title}</div>
+                  <div className="space-y-2">{topics[topic].body}</div>
+                </div>
+                <div className="flex gap-2">
+                  <button type="button" className="px-3 py-1.5 rounded-full border border-black/10 bg-white text-[#111827] text-sm" onClick={() => setTopic('root')}>
                     Voltar
                   </button>
-                  <button type="button" className="px-3 py-2 rounded-lg border border-black/10 bg-white text-[#111827]" onClick={() => setOpen(false)}>
+                  <button type="button" className="px-3 py-1.5 rounded-full border border-black/10 bg-white text-[#111827] text-sm" onClick={() => setOpen(false)}>
                     Fechar
                   </button>
                 </div>
