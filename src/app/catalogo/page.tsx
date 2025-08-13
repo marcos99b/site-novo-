@@ -75,7 +75,7 @@ export default function CatalogoPage() {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-20 spot-under">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-20">
         {/* Filtros elegantes com design melhorado */}
         <div className="flex flex-wrap justify-center gap-3 sm:gap-4 mb-10 sm:mb-16 animate-slide-up toolbar-catalog">
           {categories.map((category) => (
