@@ -165,7 +165,7 @@ export async function GET(req: NextRequest) {
         if (i === 0) return; // Mantém o primeiro
         const p = pre[idx];
         // Tenta outro qualificador que ainda não esteja no nome
-        const extra = p.qualifiers.find(q => !finalNames[idx].includes(q) && !finalNames.some(n => n === `${name} ${q}`));
+        const extra = p.qualifiers.find((q: string) => !finalNames[idx].includes(q) && !finalNames.some(n => n === `${name} ${q}`));
         if (extra) {
           finalNames[idx] = `${name} ${extra}`;
         } else {
