@@ -103,24 +103,23 @@ export default function CatalogoPage() {
               <div key={p.id} className="group animate-slide-up" style={{ animationDelay: `${idx * 0.1}s` }}>
                 <Link href={`/produto/${p.id}`} className="block pointer-events-auto">
                 <div className={`product-tile p-5 sm:p-7 lg:p-8 transition-all duration-300`}>
-                  <div className="relative w-full h-72 sm:h-80 lg:h-96 mb-6 sm:mb-8 product-media">
+                  <div className="relative w-full h-72 sm:h-80 lg:h-96 product-media">
                     <ProductImage src={p.images?.[0]?.src || `/cj/${p.id}/img-1.jpg`} alt={p.images?.[0]?.alt || p.name} />
                     <div className="absolute top-4 left-4">
                       <span className="badge-elegant text-xs px-4 py-2">{p.category || 'Moda Feminina'}</span>
                     </div>
                   </div>
-                   <div className="space-y-4">
+                  <div className="product-panel mt-5 space-y-4">
                      <h3 className="font-royal text-xl sm:text-2xl font-semibold product-title truncate-2-no-ellipsis leading-tight">{p.name}</h3>
-                     {/* Descrição ocultada para layout mais organizado e foco no título/visual */}
-                     <div className="flex items-center justify-between pt-4">
+                    <div className="flex items-center justify-between">
                       <span className="text-xl sm:text-2xl font-semibold product-price">{formatEUR(p.price)}</span>
                       {p.compare_at_price > p.price && (
                         <span className="text-base sm:text-lg product-compare line-through">{formatEUR(p.compare_at_price)}</span>
                       )}
                     </div>
-                    <div className="flex gap-3 sm:gap-4 pt-6">
+                    <div className="flex gap-3 sm:gap-4 pt-2">
                       <button type="button" onClick={(e) => { e.preventDefault(); e.stopPropagation(); handleAddToCart(p); }} className="flex-1 cta-primary pointer-events-auto">Adicionar</button>
-                      <span className="flex-1 cta-secondary--dark text-center">Detalhes</span>
+                      <button type="button" className="flex-1 cta-secondary--dark text-center">Detalhes</button>
                     </div>
                   </div>
                 </div>
