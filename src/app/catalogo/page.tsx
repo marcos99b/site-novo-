@@ -77,7 +77,7 @@ export default function CatalogoPage() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-20 spot-under">
         {/* Filtros elegantes com design melhorado */}
-        <div className="flex flex-wrap justify-center gap-3 sm:gap-4 mb-10 sm:mb-16 animate-slide-up">
+        <div className="flex flex-wrap justify-center gap-3 sm:gap-4 mb-10 sm:mb-16 animate-slide-up toolbar-catalog">
           {categories.map((category) => (
             <button
               key={category}
@@ -102,20 +102,20 @@ export default function CatalogoPage() {
             {filteredProducts.map((p, idx) => (
               <div key={p.id} className="group animate-slide-up" style={{ animationDelay: `${idx * 0.1}s` }}>
                 <Link href={`/produto/${p.id}`} className="block pointer-events-auto">
-                <div className={`card-atelier p-5 sm:p-7 lg:p-8 transition-all duration-300`}>
-                  <div className="relative w-full h-72 sm:h-80 lg:h-96 mb-6 sm:mb-8 overflow-hidden media-atelier">
+                <div className={`product-tile p-5 sm:p-7 lg:p-8 transition-all duration-300`}>
+                  <div className="relative w-full h-72 sm:h-80 lg:h-96 mb-6 sm:mb-8 product-media">
                     <ProductImage src={p.images?.[0]?.src || `/cj/${p.id}/img-1.jpg`} alt={p.images?.[0]?.alt || p.name} />
                     <div className="absolute top-4 left-4">
                       <span className="badge-elegant text-xs px-4 py-2">{p.category || 'Moda Feminina'}</span>
                     </div>
                   </div>
-                  <div className="space-y-4">
-                     <h3 className="font-royal text-xl sm:text-2xl font-semibold title-atelier truncate-2-no-ellipsis leading-tight">{p.name}</h3>
+                   <div className="space-y-4">
+                     <h3 className="font-royal text-xl sm:text-2xl font-semibold product-title truncate-2-no-ellipsis leading-tight">{p.name}</h3>
                      {/* Descrição ocultada para layout mais organizado e foco no título/visual */}
-                    <div className="flex items-center justify-between pt-4">
-                      <span className="text-xl sm:text-2xl font-semibold price-atelier">{formatEUR(p.price)}</span>
+                     <div className="flex items-center justify-between pt-4">
+                      <span className="text-xl sm:text-2xl font-semibold product-price">{formatEUR(p.price)}</span>
                       {p.compare_at_price > p.price && (
-                        <span className="text-base sm:text-lg compare-atelier line-through">{formatEUR(p.compare_at_price)}</span>
+                        <span className="text-base sm:text-lg product-compare line-through">{formatEUR(p.compare_at_price)}</span>
                       )}
                     </div>
                     <div className="flex gap-3 sm:gap-4 pt-6">

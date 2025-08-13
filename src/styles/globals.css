@@ -1331,6 +1331,18 @@ p { line-height: 1.7; }
   opacity: .6;
 }
 
+/* ====== Editorial: azulejo de produto minimalista ====== */
+.product-tile { background: transparent; }
+.product-media {
+  position: relative; overflow: hidden; border-radius: 16px;
+  background: #ffffff; border: 1px solid #e6e8eb;
+  transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
+}
+.product-media:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(0,0,0,0.08); border-color: #e2e5e9; }
+.product-title { color: #111827; }
+.product-price { color: #111827; font-weight: 600; }
+.product-compare { color: rgba(17,24,39,0.45); }
+
 /* ====== Card ATELIER (sofisticado, feminino, PT) ====== */
 .card-atelier {
   --cut: 10px;
