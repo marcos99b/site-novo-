@@ -183,7 +183,7 @@ createOrderQueue.process(async (job) => {
     // Criar pedido na CJ
     const cjOrderData = {
       // Mapear dados para formato da CJ
-      orderItems: orderItems.map(item => ({
+      orderItems: orderItems.map((item: any) => ({
         variantId: item.variantId,
         quantity: item.quantity
       })),

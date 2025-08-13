@@ -49,7 +49,7 @@ class CartManager {
     slug: string;
   }, quantity: number = 1): Cart {
     const cart = this.getCart();
-    const existingItem = cart.items.find(item => item.id === product.id);
+    const existingItem = cart.items.find((item: CartItem) => item.id === product.id);
 
     if (existingItem) {
       existingItem.quantity += quantity;
@@ -77,7 +77,7 @@ class CartManager {
   // Remover item do carrinho
   removeItem(productId: number): Cart {
     const cart = this.getCart();
-    cart.items = cart.items.filter(item => item.id !== productId);
+    cart.items = cart.items.filter((item: CartItem) => item.id !== productId);
 
     const updatedCart = {
       ...cart,
@@ -92,7 +92,7 @@ class CartManager {
   // Atualizar quantidade de um item
   updateQuantity(productId: number, quantity: number): Cart {
     const cart = this.getCart();
-    const item = cart.items.find(item => item.id === productId);
+    const item = cart.items.find((item: CartItem) => item.id === productId);
 
     if (item) {
       if (quantity <= 0) {

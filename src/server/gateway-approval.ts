@@ -95,7 +95,7 @@ async function setupGateway() {
           })
         );
         
-        const outOfStock = stockCheck.filter(item => item.requested > item.available);
+        const outOfStock = stockCheck.filter((item: any) => item.requested > item.available);
         if (outOfStock.length > 0) {
           monitoring.logWarning('Pedido rejeitado - sem estoque', { orderId, outOfStock });
           reply.status(400);
