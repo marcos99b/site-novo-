@@ -32,9 +32,9 @@ export default function RootLayout({ children }: { children: React.ReactNode; })
               <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
                 <BrandLogo />
                 <nav className="hidden md:flex items-center gap-6 text-[14px]">
-                  <Link href="/" className="font-light tracking-[0.3em] text-gray-800 hover:text-gray-900 transition">HOME</Link>
-                  <Link href="/catalogo" className="font-light tracking-[0.3em] text-gray-800 hover:text-gray-900 transition">CATÁLOGO</Link>
-                  <Link href="/pedidos" className="font-light tracking-[0.3em] text-gray-800 hover:text-gray-900 transition">MEUS PEDIDOS</Link>
+                  <Link href="/" className="nav-brand-link">HOME</Link>
+                  <Link href="/catalogo" className="nav-brand-link">CATÁLOGO</Link>
+                  <Link href="/pedidos" className="nav-brand-link">MEUS PEDIDOS</Link>
                 </nav>
                 <div className="flex items-center gap-3">
                     <CartButton />
