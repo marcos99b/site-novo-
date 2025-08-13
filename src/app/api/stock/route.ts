@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
   const variants = await prisma.variant.findMany({
     where: variantIds.length ? { cjVariantId: { in: variantIds } } : {},
   });
-  const vids = variants.map((v) => v.cjVariantId);
+  const vids = variants.map((v: { cjVariantId: string }) => v.cjVariantId);
   if (vids.length === 0) return NextResponse.json({ updated: 0 });
 
   const { updated, results } = await updateStockByVariantIds(vids);
