@@ -129,8 +129,9 @@ export async function GET(req: NextRequest) {
         slug: pid,
         description: '',
         short_description: '',
-        price: 0,
-        compare_at_price: 0,
+        // Preço padrão não-zero para evitar catálogo sem valores enquanto o sync popula o DB
+        price: 59.9,
+        compare_at_price: 89.9,
         images: (imgs as string[]).map((src) => ({ src })),
         category: 'Coleção',
         stock: 0,
@@ -205,14 +206,26 @@ export async function GET(req: NextRequest) {
     // 3) Montar resposta final
     const formattedProducts = pre.map((entry: any, idx: number) => {
       const { product, mergedImages } = entry;
+      const variantPrices = Array.isArray(product.variants)
+        ? product.variants
+            .map((v: any) => Number(v?.price || 0))
+            .filter((n: number) => Number.isFinite(n) && n > 0)
+        : [];
+      const computedMin = variantPrices.length ? Math.min(...variantPrices) : undefined;
+      const computedMax = variantPrices.length ? Math.max(...variantPrices) : undefined;
+      const priceVal = Number(product.priceMin);
+      const compareVal = Number(product.priceMax);
+      const price = Number.isFinite(priceVal) && priceVal > 0 ? priceVal : (computedMin || 59.9);
+      let compare_at_price = Number.isFinite(compareVal) && compareVal > 0 ? compareVal : (computedMax || Math.round(price * 1.35 * 10) / 10);
+      if (compare_at_price < price) compare_at_price = price;
       return ({
         id: product.id,
         name: finalNames[idx],
         slug: product.id,
         description: (product.description || '').replace(/cj/gi, '').replace(/Dropshipping/gi, '').replace(/–\s*peça selecionada.*$/i, '').trim(),
         short_description: ((product.description || '').length > 110 ? (product.description || '').slice(0, 110) + '…' : (product.description || '')),
-        price: product.priceMin,
-        compare_at_price: product.priceMax,
+        price,
+        compare_at_price,
         images: mergedImages.map((img: any) => (typeof img === 'string' ? { src: img } : img)),
         category: product.category,
         stock: product.variants.reduce((sum: number, v: { stock: number }) => sum + (v?.stock || 0), 0),

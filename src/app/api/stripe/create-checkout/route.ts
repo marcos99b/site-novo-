@@ -54,13 +54,13 @@ export async function POST(req: NextRequest) {
       currency,
       successPath,
       cancelPath,
-      payment_method_types: ['card', 'link'],
+      payment_method_types: ['card'],
     };
     let idemKey = crypto.createHash('sha256').update(JSON.stringify(idemSeed)).digest('hex');
 
     const createParams: Stripe.Checkout.SessionCreateParams = {
       mode: 'payment',
-      payment_method_types: ['card', 'link'],
+      payment_method_types: ['card'],
       line_items,
       success_url: `${SITE_URL}${successPath}?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${SITE_URL}${cancelPath}`,
