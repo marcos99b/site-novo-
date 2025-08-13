@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from '@/lib/db';
+import fs from 'fs/promises';
+import path from 'path';
 
 // usando instância compartilhada de prisma de '@/lib/db'
 
@@ -19,6 +21,41 @@ export async function GET(
     });
 
     if (!product) {
+      // Fallback: tentar manifest local para não quebrar a PDP quando o DB estiver vazio
+      try {
+        const manifestPath = path.join(process.cwd(), 'public', 'produtos', 'manifest.json');
+        const raw = await fs.readFile(manifestPath, 'utf-8');
+        const parsed: any = JSON.parse(raw || '{}');
+        const entry = parsed?.[productId];
+        const images = Array.isArray(entry)
+          ? (entry as string[]).map((src) => ({ src }))
+          : (entry && Array.isArray(entry?.images))
+            ? (entry.images as string[]).map((src: string) => ({ src }))
+            : [];
+
+        if (images.length) {
+          const fallback = {
+            id: productId,
+            cjProductId: null,
+            name: `Produto ${productId}`,
+            description: 'Descrição em preparação.',
+            price: 0,
+            compare_at_price: 0,
+            images,
+            category: 'Coleção',
+            stock: 0,
+            available: true,
+            variants: [],
+            colors: [],
+            sizes: [],
+            variant_matrix: [],
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          };
+          return NextResponse.json({ product: fallback });
+        }
+      } catch {}
+
       return NextResponse.json(
         { error: 'Produto não encontrado' },
         { status: 404 }
