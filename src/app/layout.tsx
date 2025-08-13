@@ -48,9 +48,9 @@ export default function RootLayout({ children }: { children: React.ReactNode; })
             <footer className="mt-20 border-t border-black/[0.06] bg-white/70">
               <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 md:grid-cols-4 gap-10 text-[14px]">
                 <div className="md:col-span-2"><BrandLogo className="mb-3" /><p className="text-black/70">Moda feminina elegante e atual. Envio rápido para Portugal.</p></div>
-                <div><div className="font-medium mb-3">Coleções</div><ul className="space-y-2 text-black/70"><li><a href="/catalogo">Vestidos</a></li><li><a href="/catalogo">Conjuntos</a></li><li><a href="/catalogo">Festa</a></li><li><a href="/catalogo">Outono / Inverno</a></li></ul></div>
+                <div><div className="font-medium mb-3 text-[#111827]">Coleções</div><ul className="space-y-2 text-black/70"><li><a href="/catalogo">Vestidos</a></li><li><a href="/catalogo">Conjuntos</a></li><li><a href="/catalogo">Festa</a></li><li><a href="/catalogo">Outono / Inverno</a></li></ul></div>
                 <div>
-                  <div className="font-medium mb-3">Ajuda</div>
+                  <div className="font-medium mb-3 text-[#111827]">Ajuda</div>
                   <ul className="space-y-2 text-black/70">
                     <li><Link href="/ajuda">Central de Ajuda</Link></li>
                     <li><Link href="/trocas-devolucoes">Trocas e Devoluções</Link></li>
