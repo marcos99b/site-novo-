@@ -3,11 +3,17 @@ import { createClient } from '@supabase/supabase-js';
 import fs from 'fs/promises';
 import path from 'path';
 
-// Cliente Supabase
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+// Função para criar cliente Supabase
+function createSupabaseClient() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  
+  if (!supabaseUrl || !supabaseKey) {
+    throw new Error('Supabase credentials not configured');
+  }
+  
+  return createClient(supabaseUrl, supabaseKey);
+}
 
 export async function GET(req: NextRequest) {
   try {
@@ -17,6 +23,7 @@ export async function GET(req: NextRequest) {
     const search = searchParams.get('search');
 
     // Buscar produtos do Supabase
+    const supabase = createSupabaseClient();
     let query = supabase
       .from('products')
       .select(`
