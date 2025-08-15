@@ -1,10 +1,9 @@
 'use client';
 
 import Link from "next/link";
-import ProductImage from "@/components/ProductImage";
-import PromotionalBanner from "@/components/PromotionalBanner";
+import OptimizedImage from "@/components/OptimizedImage";
 import { formatEUR } from "@/lib/currency";
-import { useEffect, useMemo, useState, useCallback } from "react";
+import { useEffect, useMemo, useState, useCallback, useRef } from "react";
 import { trackUserEvent } from '@/lib/supabase';
 import dynamic from 'next/dynamic';
 
@@ -12,6 +11,12 @@ import dynamic from 'next/dynamic';
 const LazyPromotionalBanner = dynamic(() => import('@/components/PromotionalBanner'), {
   loading: () => <div className="h-32 bg-gradient-to-r from-slate-50 to-gray-100 animate-pulse rounded-lg" />,
   ssr: false
+});
+
+// Lazy load do ProductImage para melhor performance
+const LazyProductImage = dynamic(() => import('@/components/ProductImage'), {
+  loading: () => <div className="w-full h-64 bg-gradient-to-br from-slate-200 to-gray-300 animate-pulse rounded-2xl" />,
+  ssr: true
 });
 
 interface FeaturedProduct {
@@ -24,41 +29,84 @@ interface FeaturedProduct {
   category?: string;
 }
 
-// Otimizar imagens hero com lazy loading
+// Otimizar imagens hero com lazy loading - versões comprimidas
 const heroImages = [
-  "/colecao-outono/_prompt_para_krea_ai_descrio_principal-_elegant_european_woman_model_wearing_modern_minimalist_wome_55bgeu2szrwlg1r04wyz_1.png",
-  "/colecao-outono/_prompt_para_krea_ai_descrio_principal-_elegant_european_woman_model_wearing_modern_minimalist_wome_r3jefi8x5rb9tz9xasf6_2.png",
-  "/colecao-outono/_prompt_para_krea_ai_descrio_principal-_elegant_european_woman_model_wearing_modern_minimalist_wome_rg9aw0gyq6ng5ij6w9p2_3.png",
+  "/colecao-outono/optimized/hero-1.jpg",
+  "/colecao-outono/optimized/hero-2.jpg",
+  "/colecao-outono/optimized/hero-3.jpg",
 ];
 
 export default function Home() {
   const [featured, setFeatured] = useState<FeaturedProduct[]>([]);
   const [current, setCurrent] = useState(0);
+  const [isLoading, setIsLoading] = useState(true);
 
   const currentImage = useMemo(() => heroImages[current % heroImages.length], [current]);
 
-  // Otimizar função de carregamento com useCallback
+  // Cache local para produtos
+  const productCache = useRef<{ data: FeaturedProduct[]; timestamp: number } | null>(null);
+  const CACHE_DURATION = 5 * 60 * 1000; // 5 minutos
+
+  // Otimizar função de carregamento com cache e useCallback
   const loadFeaturedProducts = useCallback(async () => {
+    // Verificar cache primeiro
+    if (productCache.current && Date.now() - productCache.current.timestamp < CACHE_DURATION) {
+      setFeatured(productCache.current.data);
+      setIsLoading(false);
+      return;
+    }
+
     try {
+      setIsLoading(true);
       // Tentar primeiro a API do Supabase
-      let res = await fetch('/api/supabase/products?featured=true', { cache: 'no-store' });
+      let res = await fetch('/api/supabase/products?featured=true', { 
+        cache: 'no-store',
+        headers: {
+          'Cache-Control': 'max-age=300' // 5 minutos
+        }
+      });
+      
       if (!res.ok) {
         // Fallback para API antiga
-        res = await fetch('/api/products?featured=true', { cache: 'no-store' });
+        res = await fetch('/api/products?featured=true', { 
+          cache: 'no-store',
+          headers: {
+            'Cache-Control': 'max-age=300' // 5 minutos
+          }
+        });
       }
+      
       const data = await res.json();
-      setFeatured(data.products || []);
+      const products = data.products || [];
+      
+      // Salvar no cache
+      productCache.current = {
+        data: products,
+        timestamp: Date.now()
+      };
+      
+      setFeatured(products);
     } catch (error) {
       console.error('Erro ao buscar produtos:', error);
       // Fallback final para API antiga
       try {
         const res = await fetch('/api/products?featured=true', { cache: 'no-store' });
         const data = await res.json();
-        setFeatured(data.products || []);
+        const products = data.products || [];
+        
+        // Salvar no cache mesmo em caso de erro
+        productCache.current = {
+          data: products,
+          timestamp: Date.now()
+        };
+        
+        setFeatured(products);
       } catch (fallbackError) {
         console.error('Erro no fallback:', fallbackError);
         setFeatured([]);
       }
+    } finally {
+      setIsLoading(false);
     }
   }, []);
 
@@ -109,12 +157,11 @@ export default function Home() {
           {/* Imagem elegante com lazy loading */}
           <div className="relative animate-scale-in">
             <div className="model-3d relative w-full max-w-[500px] h-[600px] rounded-2xl overflow-hidden">
-              <img 
+              <OptimizedImage
                 src={currentImage || '/placeholder.jpg'} 
                 alt="Modelo feminina" 
-                className="w-full h-full object-cover"
-                loading="lazy"
-                onError={(e) => { (e.target as HTMLImageElement).src = '/placeholder.jpg'; }}
+                className="w-full h-full"
+                priority={true}
               />
               
               {/* Overlay sutil */}
@@ -170,10 +217,10 @@ export default function Home() {
                       >
                         <div data-tilt className="h-full w-full transform-gpu transition-transform duration-200 ease-out will-change-transform">
                           <div className="absolute inset-0 transition-opacity duration-300 ease-out group-hover:opacity-0">
-                            <ProductImage rounded={false} src={p.images?.[0]?.src || `/cj/${p.id}/img-1.jpg`} alt={p.images?.[0]?.alt || p.name} />
+                            <OptimizedImage className="w-full h-full" src={p.images?.[0]?.src || `/cj/${p.id}/img-1.jpg`} alt={p.images?.[0]?.alt || p.name} />
                           </div>
                           <div className="absolute inset-0 opacity-0 transition-opacity duration-300 ease-out group-hover:opacity-100">
-                            <ProductImage rounded={false} src={(p.images && p.images[1]?.src) || (thumbs[1]?.src as any) || `/cj/${p.id}/img-2.jpg`} alt={p.images?.[1]?.alt || p.name} />
+                            <OptimizedImage className="w-full h-full" src={(p.images && p.images[1]?.src) || (thumbs[1]?.src as any) || `/cj/${p.id}/img-2.jpg`} alt={p.images?.[1]?.alt || p.name} />
                           </div>
                         </div>
                         <div className="absolute top-2 left-2 flex gap-2">
@@ -214,7 +261,7 @@ export default function Home() {
                         <div className="flex items-center gap-2 justify-center mb-2">
                           {thumbs.slice(0, 3).map((img, i) => (
                             <div key={i} className="w-8 h-8 sm:w-10 sm:h-10 rounded overflow-hidden border border-black/10">
-                              <ProductImage src={img.src} alt={img.alt || p.name} />
+                              <OptimizedImage src={img.src} alt={img.alt || p.name} />
                             </div>
                           ))}
                         </div>
@@ -240,7 +287,7 @@ export default function Home() {
       </section>
 
       {/* Banner Promocional - Componente Dinâmico */}
-      <PromotionalBanner
+      <LazyPromotionalBanner
         title="Até 40% de desconto"
         subtitle="Coleção Outono"
         description="Descubra peças exclusivas com caimento perfeito. Envio grátis para Portugal em pedidos acima de 50€."
