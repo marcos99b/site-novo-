@@ -1,31 +1,54 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 export default function ParallaxBackground() {
+  const timeoutRef = useRef<NodeJS.Timeout>();
+  const isScrolling = useRef(false);
+
   useEffect(() => {
     const root = document.documentElement;
 
+    // Throttled mouse move para melhor performance
     const onMouseMove = (e: MouseEvent) => {
-      const cx = window.innerWidth / 2;
-      const cy = window.innerHeight / 2;
-      const dx = (e.clientX - cx) / cx; // -1 .. 1
-      const dy = (e.clientY - cy) / cy; // -1 .. 1
-      root.style.setProperty("--mx", (dx * 20).toFixed(2) + "px");
-      root.style.setProperty("--my", (dy * 20).toFixed(2) + "px");
+      if (timeoutRef.current) return;
+      
+      timeoutRef.current = setTimeout(() => {
+        const cx = window.innerWidth / 2;
+        const cy = window.innerHeight / 2;
+        const dx = (e.clientX - cx) / cx;
+        const dy = (e.clientY - cy) / cy;
+        
+        root.style.setProperty("--mx", (dx * 15).toFixed(2) + "px");
+        root.style.setProperty("--my", (dy * 15).toFixed(2) + "px");
+        timeoutRef.current = undefined;
+      }, 16); // ~60fps
     };
 
+    // Throttled scroll para melhor performance
     const onScroll = () => {
-      root.style.setProperty("--sy", String(window.scrollY || 0));
+      if (isScrolling.current) return;
+      
+      isScrolling.current = true;
+      requestAnimationFrame(() => {
+        root.style.setProperty("--sy", String(window.scrollY || 0));
+        isScrolling.current = false;
+      });
     };
 
-    window.addEventListener("mousemove", onMouseMove);
+    // Usar passive listeners para melhor performance
+    window.addEventListener("mousemove", onMouseMove, { passive: true });
     window.addEventListener("scroll", onScroll, { passive: true });
+    
+    // Inicializar valores
     onScroll();
 
     return () => {
       window.removeEventListener("mousemove", onMouseMove);
       window.removeEventListener("scroll", onScroll);
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
     };
   }, []);
 

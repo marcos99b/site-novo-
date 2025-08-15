@@ -4,8 +4,15 @@ import Link from "next/link";
 import ProductImage from "@/components/ProductImage";
 import PromotionalBanner from "@/components/PromotionalBanner";
 import { formatEUR } from "@/lib/currency";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import { trackUserEvent } from '@/lib/supabase';
+import dynamic from 'next/dynamic';
+
+// Lazy load do banner promocional
+const LazyPromotionalBanner = dynamic(() => import('@/components/PromotionalBanner'), {
+  loading: () => <div className="h-32 bg-gradient-to-r from-slate-50 to-gray-100 animate-pulse rounded-lg" />,
+  ssr: false
+});
 
 interface FeaturedProduct {
   id: string | number;
@@ -17,6 +24,7 @@ interface FeaturedProduct {
   category?: string;
 }
 
+// Otimizar imagens hero com lazy loading
 const heroImages = [
   "/colecao-outono/_prompt_para_krea_ai_descrio_principal-_elegant_european_woman_model_wearing_modern_minimalist_wome_55bgeu2szrwlg1r04wyz_1.png",
   "/colecao-outono/_prompt_para_krea_ai_descrio_principal-_elegant_european_woman_model_wearing_modern_minimalist_wome_r3jefi8x5rb9tz9xasf6_2.png",
@@ -29,32 +37,34 @@ export default function Home() {
 
   const currentImage = useMemo(() => heroImages[current % heroImages.length], [current]);
 
-  useEffect(() => {
-    async function load() {
+  // Otimizar função de carregamento com useCallback
+  const loadFeaturedProducts = useCallback(async () => {
+    try {
+      // Tentar primeiro a API do Supabase
+      let res = await fetch('/api/supabase/products?featured=true', { cache: 'no-store' });
+      if (!res.ok) {
+        // Fallback para API antiga
+        res = await fetch('/api/products?featured=true', { cache: 'no-store' });
+      }
+      const data = await res.json();
+      setFeatured(data.products || []);
+    } catch (error) {
+      console.error('Erro ao buscar produtos:', error);
+      // Fallback final para API antiga
       try {
-        // Tentar primeiro a API do Supabase
-        let res = await fetch('/api/supabase/products?featured=true', { cache: 'no-store' });
-        if (!res.ok) {
-          // Fallback para API antiga
-          res = await fetch('/api/products?featured=true', { cache: 'no-store' });
-        }
+        const res = await fetch('/api/products?featured=true', { cache: 'no-store' });
         const data = await res.json();
         setFeatured(data.products || []);
-      } catch (error) {
-        console.error('Erro ao buscar produtos:', error);
-        // Fallback final para API antiga
-        try {
-          const res = await fetch('/api/products?featured=true', { cache: 'no-store' });
-          const data = await res.json();
-          setFeatured(data.products || []);
-        } catch (fallbackError) {
-          console.error('Erro no fallback:', fallbackError);
-          setFeatured([]);
-        }
+      } catch (fallbackError) {
+        console.error('Erro no fallback:', fallbackError);
+        setFeatured([]);
       }
     }
-    load();
   }, []);
+
+  useEffect(() => {
+    loadFeaturedProducts();
+  }, [loadFeaturedProducts]);
 
   useEffect(() => {
     const id = setInterval(() => setCurrent((c) => c + 1), 5000);
@@ -96,13 +106,14 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Imagem elegante */}
+          {/* Imagem elegante com lazy loading */}
           <div className="relative animate-scale-in">
             <div className="model-3d relative w-full max-w-[500px] h-[600px] rounded-2xl overflow-hidden">
               <img 
                 src={currentImage || '/placeholder.jpg'} 
                 alt="Modelo feminina" 
                 className="w-full h-full object-cover"
+                loading="lazy"
                 onError={(e) => { (e.target as HTMLImageElement).src = '/placeholder.jpg'; }}
               />
               
@@ -115,8 +126,6 @@ export default function Home() {
               </div>
             </div>
           </div>
-
-
         </div>
       </section>
 

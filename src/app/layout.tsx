@@ -11,8 +11,26 @@ import BrandLogo from '@/components/BrandLogo';
 import ParallaxBackground from '@/components/ParallaxBackground';
 import dynamic from 'next/dynamic';
 
-const inter = Inter({ subsets: ['latin'] });
-const poppins = Poppins({ subsets: ['latin'], weight: ['300','400','500','600','700'], variable: '--font-poppins' });
+const inter = Inter({ 
+  subsets: ['latin'],
+  display: 'swap', // Melhor performance de fontes
+  preload: true
+});
+
+const poppins = Poppins({ 
+  subsets: ['latin'], 
+  weight: ['300','400','500','600','700'], 
+  variable: '--font-poppins',
+  display: 'swap', // Melhor performance de fontes
+  preload: true
+});
+
+// Lazy load do ChatWidget para melhor performance
+const ChatWidget = dynamic(() => import('@/components/ChatWidget'), { 
+  ssr: false,
+  loading: () => null, // Não mostrar nada enquanto carrega
+  suspense: false
+});
 
 export const metadata: Metadata = {
   title: 'Reliet - Moda Feminina',
@@ -22,7 +40,6 @@ export const metadata: Metadata = {
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode; }) {
-  const ChatWidget = dynamic(() => import('@/components/ChatWidget'), { ssr: false });
   return (
     <html lang="pt-PT">
       <body className={`${inter.className} ${poppins.variable} min-h-screen app-bg`}>
