@@ -212,3 +212,4 @@ Para dúvidas ou problemas:
 ## 📄 Licença
 
 Este projeto é privado e proprietário da Beyond Chargers Brasil.
+# Force Vercel Deploy Thu Aug 14 21:32:22 -03 2025
