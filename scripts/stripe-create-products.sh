@@ -30,3 +30,4 @@ echo "Concluído. Mapping salvo em stripe_products_map.csv"
 
 
 
+

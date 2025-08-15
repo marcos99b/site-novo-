@@ -8,9 +8,10 @@ interface ProductImageProps {
   className?: string;
   fallbackText?: string;
   priority?: boolean;
+  rounded?: boolean;
 }
 
-export default function ProductImage({ src, alt, className = "", fallbackText, priority = false }: ProductImageProps) {
+export default function ProductImage({ src, alt, className = "", fallbackText, priority = false, rounded = true }: ProductImageProps) {
   const [currentSrc, setCurrentSrc] = useState(src || '/placeholder.jpg');
   const [imageLoading, setImageLoading] = useState(true);
 
@@ -34,7 +35,7 @@ export default function ProductImage({ src, alt, className = "", fallbackText, p
   };
 
   return (
-    <div className={`w-full h-full relative overflow-hidden rounded-2xl img-3d ${className}`}
+    <div className={`w-full h-full relative overflow-hidden ${rounded ? 'rounded-2xl' : ''} img-3d ${className}`}
       onMouseMove={(e) => {
         const target = e.currentTarget.querySelector('.img-3d-inner') as HTMLDivElement | null;
         if (!target) return;

@@ -13,11 +13,17 @@ const path = require('path');
 const prisma = new PrismaClient();
 
 const CJ_LIST = [
+  // 1 → Solid color slimming long sleeve pocket woolen women's coat
   { id: 1, cjProductId: '2508080521221628200', name: "Solid color slimming long sleeve pocket woolen women's coat" },
-  { id: 2, cjProductId: '2508010339421629200', name: "Women's V-neck Hollow Rhombus Casual Knitted Sweater Vest" },
+  // 2 → Lightly Mature Cotton And Linen Suit Women
+  { id: 2, cjProductId: '2508050834351619900', name: 'Lightly Mature Cotton And Linen Suit Women' },
+  // 3 → New loose slimming temperament casual cotton linen top
   { id: 3, cjProductId: '2508041417241619800', name: 'New loose slimming temperament casual cotton linen top' },
+  // 4 → Fashion all-match comfort and casual woolen turn-down collar coat
   { id: 4, cjProductId: '2508060259111624600', name: 'Fashion all-match comfort and casual woolen turn-down collar coat' },
+  // 5 → Women's V-neck Hollow Rhombus Casual Knitted Sweater Vest
   { id: 5, cjProductId: '2508010339421629200', name: "Women's V-neck Hollow Rhombus Casual Knitted Sweater Vest" },
+  // 6 → Metal buckle slit knitted vest slim fit vest foreign trade TUP cardigan
   { id: 6, cjProductId: '2504290217311600400', name: 'Metal buckle slit knitted vest slim fit vest foreign trade TUP cardigan' }
 ];
 

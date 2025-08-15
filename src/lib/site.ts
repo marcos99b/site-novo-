@@ -4,6 +4,6 @@ export function getSiteUrl(): string {
   if (envUrl && /^https?:\/\//.test(envUrl)) return envUrl.replace(/\/$/, '');
 
   // Ambiente de desenvolvimento padrão
-  return 'http://localhost:3001';
+  return 'http://localhost:3000';
 }
 

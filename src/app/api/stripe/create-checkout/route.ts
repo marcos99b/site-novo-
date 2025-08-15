@@ -28,15 +28,84 @@ export async function POST(req: NextRequest) {
 
     const stripe = new Stripe(STRIPE_SECRET_KEY, { apiVersion: '2023-10-16' });
 
-    // Normalizar itens (name, amount_cents, quantity)
-    const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = (items || []).map((it: any) => ({
-      quantity: it.quantity || 1,
-      price_data: {
-        currency: (it.currency || currency).toLowerCase(),
-        product_data: { name: it.name || 'Produto' },
-        unit_amount: Number(it.amount_cents || Math.round((it.amount || 0) * 100))
+    // Normalizar itens (name, amount_cents, quantity) com enriquecimento do Supabase quando não vier preço
+    const inputItems: Array<any> = Array.isArray(items) ? items : [];
+
+    // Coletar slugs/id que precisam de preço do Supabase
+    const toLookup: string[] = [];
+    const normalizedKeys: string[] = [];
+    for (const it of inputItems) {
+      const hasPrice = Number.isFinite(Number(it?.amount_cents)) || Number.isFinite(Number(it?.amount));
+      if (!hasPrice) {
+        const raw = String(it?.slug || it?.id || it?.productId || '');
+        if (raw) {
+          const slug = /^produto-\d+$/i.test(raw) ? raw : (/^\d+$/.test(raw) ? `produto-${raw}` : raw);
+          toLookup.push(slug);
+        }
       }
-    }));
+      const key = String(it?.slug || it?.id || it?.productId || '');
+      normalizedKeys.push(key);
+    }
+
+    // Buscar preços/nome do Supabase (REST) se necessário
+    let priceBySlug: Record<string, { name: string; price: number }> = {};
+    let priceIdBySlug: Record<string, string> = {};
+    if (toLookup.length) {
+      const unique = Array.from(new Set(toLookup));
+      try {
+        const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
+        const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+        if (SUPABASE_URL && SERVICE_ROLE_KEY) {
+          const sb = createClient(SUPABASE_URL, SERVICE_ROLE_KEY);
+          // Tabela de produtos
+          const [{ data: rows }, { data: priceRows }] = await Promise.all([
+            sb.from('products').select('slug,name,price').in('slug', unique),
+            sb.from('stripe_price_map').select('slug,stripe_price_id').in('slug', unique)
+          ]);
+          if (Array.isArray(rows)) {
+            for (const r of rows) {
+              if (!r?.slug) continue;
+              priceBySlug[String(r.slug)] = { name: r.name || 'Produto', price: Number(r.price || 0) };
+            }
+          }
+          if (Array.isArray(priceRows)) {
+            for (const pr of priceRows) {
+              if (pr?.slug && pr?.stripe_price_id) priceIdBySlug[String(pr.slug)] = String(pr.stripe_price_id);
+            }
+          }
+        }
+      } catch {}
+    }
+
+    const line_items: Stripe.Checkout.SessionCreateParams.LineItem[] = inputItems.map((it: any, idx: number) => {
+      const qty = Number(it?.quantity || 1);
+      const curr = String((it?.currency || currency || 'EUR')).toLowerCase();
+      const raw = String(it?.slug || it?.id || it?.productId || '');
+      const slug = /^produto-\d+$/i.test(raw) ? raw : (/^\d+$/.test(raw) ? `produto-${raw}` : raw);
+      const fromSb = slug && priceBySlug[slug] ? priceBySlug[slug] : null;
+      const name = String(it?.name || fromSb?.name || 'Produto');
+      const unitAmount = Number.isFinite(Number(it?.amount_cents))
+        ? Number(it.amount_cents)
+        : Math.round((Number(it?.amount) || (fromSb ? fromSb.price : 0)) * 100);
+      // Preferir price ID mapeado na Stripe
+      const mappedPriceId = (typeof it?.price_id === 'string' && it.price_id.startsWith('price_'))
+        ? String(it.price_id)
+        : (priceIdBySlug[slug] || '');
+      if (mappedPriceId) {
+        return {
+          quantity: qty > 0 ? qty : 1,
+          price: mappedPriceId,
+        } as Stripe.Checkout.SessionCreateParams.LineItem;
+      }
+      return {
+        quantity: qty > 0 ? qty : 1,
+        price_data: {
+          currency: curr,
+          product_data: { name },
+          unit_amount: unitAmount,
+        },
+      } as Stripe.Checkout.SessionCreateParams.LineItem;
+    }).filter(li => (li as any).price || Number(li.price_data?.unit_amount || 0) > 0);
 
     if (!line_items.length) {
       return NextResponse.json({ ok: false, error: 'Nenhum item informado' }, { status: 400 });
@@ -45,11 +114,12 @@ export async function POST(req: NextRequest) {
     // Criar sessão de checkout do Stripe
     // Idempotency: incluir parâmetros relevantes (itens, moeda, rotas, métodos) para evitar conflito ao mudar configuração
     const idemSeed = {
-      items: line_items.map(li => ({
+      items: line_items.map((li: any) => ({
         q: li.quantity,
         a: li.price_data?.unit_amount,
         c: li.price_data?.currency,
         n: li.price_data?.product_data?.name,
+        p: li.price, // quando usar price ID
       })),
       currency,
       successPath,

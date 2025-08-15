@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import ProductImage from "@/components/ProductImage";
+import PromotionalBanner from "@/components/PromotionalBanner";
 import { formatEUR } from "@/lib/currency";
 import { useEffect, useMemo, useState } from "react";
 import { trackUserEvent } from '@/lib/supabase';
@@ -31,11 +32,25 @@ export default function Home() {
   useEffect(() => {
     async function load() {
       try {
-        const res = await fetch('/api/products?featured=true', { cache: 'no-store' });
+        // Tentar primeiro a API do Supabase
+        let res = await fetch('/api/supabase/products?featured=true', { cache: 'no-store' });
+        if (!res.ok) {
+          // Fallback para API antiga
+          res = await fetch('/api/products?featured=true', { cache: 'no-store' });
+        }
         const data = await res.json();
         setFeatured(data.products || []);
-      } catch {
-        setFeatured([]);
+      } catch (error) {
+        console.error('Erro ao buscar produtos:', error);
+        // Fallback final para API antiga
+        try {
+          const res = await fetch('/api/products?featured=true', { cache: 'no-store' });
+          const data = await res.json();
+          setFeatured(data.products || []);
+        } catch (fallbackError) {
+          console.error('Erro no fallback:', fallbackError);
+          setFeatured([]);
+        }
       }
     }
     load();
@@ -105,7 +120,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Produtos em Destaque elegantes - Layout melhorado */}
+      {/* Produtos em Destaque elegantes - Layout interativo como catálogo */}
       <section className="relative py-24 section-3d-aurum spot-under">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-20 animate-slide-up">
@@ -118,40 +133,118 @@ export default function Home() {
             </p>
           </div>
 
-          {/* Grid de produtos elegante e espaçado */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
-            {featured.slice(0, 6).map((p, idx) => (
-              <div key={p.id} className="group animate-slide-up" style={{ animationDelay: `${idx * 0.15}s` }}>
-                <div className="card-elegant p-8 hover:scale-[1.02] transition-all duração-500">
-                  <div className="w-full h-96 bg-[#faf9f6] rounded-2xl mb-8 overflow-hidden">
-                    <ProductImage src={p.images?.[0]?.src || `/cj/${p.id}/img-1.jpg`} alt={p.images?.[0]?.alt || p.name} />
-                  </div>
-                  <div className="mb-4"><span className="badge-elegant text-xs px-4 py-2">{p.category || 'Moda Feminina'}</span></div>
-                  <div className="space-y-4">
-                    <h3 className="text-xl font-medium text-[#1a1a1a] truncate-2-no-ellipsis leading-tight group-hover:text-[#1a1a1a]/80 transition-colors">{p.name}</h3>
-                    <div className="flex items-center justify-between pt-4">
-                      <span className="text-2xl font-semibold text-[#1a1a1a]">{formatEUR(p.price)}</span>
-                      {p.compare_at_price > p.price && (
-                        <span className="text-lg text-[#1a1a1a]/50 line-through">{formatEUR(p.compare_at_price)}</span>
+          {/* Grid de produtos interativo com efeitos 3D - PADRÃO DO CATÁLOGO */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+            {featured.slice(0, 6).map((p, idx) => {
+              const thumbs = (p.images || []).slice(0, 4);
+              const isNew = idx < 4;
+              const isBest = p.compare_at_price > p.price;
+              return (
+                <div key={p.id} className="group animate-slide-up" style={{ animationDelay: `${idx * 0.06}s` }}>
+                  <div className="bg-white rounded-2xl overflow-hidden">
+                    <Link href={`/produto/${p.id}`} className="block">
+                      <div
+                        className="relative aspect-[4/5] overflow-hidden [perspective:1000px]"
+                        onMouseMove={(e) => {
+                          const rect = (e.currentTarget as HTMLDivElement).getBoundingClientRect();
+                          const x = (e.clientX - rect.left) / rect.width;
+                          const y = (e.clientY - rect.top) / rect.height;
+                          const ry = (x - 0.5) * 12; // rotateY
+                          const rx = (0.5 - y) * 12; // rotateX
+                          const inner = (e.currentTarget as HTMLDivElement).querySelector('[data-tilt]') as HTMLDivElement | null;
+                          if (inner) inner.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg) scale(1.02)`;
+                        }}
+                        onMouseLeave={(e) => {
+                          const inner = (e.currentTarget as HTMLDivElement).querySelector('[data-tilt]') as HTMLDivElement | null;
+                          if (inner) inner.style.transform = '';
+                        }}
+                      >
+                        <div data-tilt className="h-full w-full transform-gpu transition-transform duration-200 ease-out will-change-transform">
+                          <div className="absolute inset-0 transition-opacity duration-300 ease-out group-hover:opacity-0">
+                            <ProductImage rounded={false} src={p.images?.[0]?.src || `/cj/${p.id}/img-1.jpg`} alt={p.images?.[0]?.alt || p.name} />
+                          </div>
+                          <div className="absolute inset-0 opacity-0 transition-opacity duration-300 ease-out group-hover:opacity-100">
+                            <ProductImage rounded={false} src={(p.images && p.images[1]?.src) || (thumbs[1]?.src as any) || `/cj/${p.id}/img-2.jpg`} alt={p.images?.[1]?.alt || p.name} />
+                          </div>
+                        </div>
+                        <div className="absolute top-2 left-2 flex gap-2">
+                          {isNew && (
+                            <span className={`text-white text-[11px] px-2 py-1 rounded font-medium ${
+                              idx % 4 === 0 ? 'bg-emerald-600' : 
+                              idx % 4 === 1 ? 'bg-blue-600' : 
+                              idx % 4 === 2 ? 'bg-purple-600' : 'bg-amber-600'
+                            }`}>
+                              {idx % 4 === 0 ? '✨ New' : 
+                               idx % 4 === 1 ? '🔥 Trend' : 
+                               idx % 4 === 2 ? '⭐ Premium' : '🌟 Latest'}
+                            </span>
+                          )}
+                          {isBest && (
+                            <span className={`text-white text-[11px] px-2 py-1 rounded font-medium ${
+                              idx % 4 === 0 ? 'bg-red-600' : 
+                              idx % 4 === 1 ? 'bg-orange-600' : 
+                              idx % 4 === 2 ? 'bg-pink-600' : 'bg-rose-600'
+                            }`}>
+                              {idx % 4 === 0 ? '🏆 Bestseller' : 
+                               idx % 4 === 1 ? '💎 Popular' : 
+                               idx % 4 === 2 ? '🎯 Top Pick' : '💫 Favorito'}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </Link>
+                    <div className="pt-3 pb-4 sm:pb-6">
+                      <h3 className="text-[13px] uppercase tracking-wide text-[#111827] mb-2 line-clamp-2 text-center px-3">{p.name}</h3>
+                      <div className="flex items-center gap-3 mb-2 justify-center">
+                        <span className="text-[18px] font-semibold text-[#111827]">{formatEUR(p.price)}</span>
+                        {p.compare_at_price > p.price && (
+                          <span className="text-[14px] text-black/60 line-through">{formatEUR(p.compare_at_price)}</span>
+                        )}
+                      </div>
+                      {thumbs.length > 1 && (
+                        <div className="flex items-center gap-2 justify-center mb-2">
+                          {thumbs.slice(0, 3).map((img, i) => (
+                            <div key={i} className="w-8 h-8 sm:w-10 sm:h-10 rounded overflow-hidden border border-black/10">
+                              <ProductImage src={img.src} alt={img.alt || p.name} />
+                            </div>
+                          ))}
+                        </div>
                       )}
-                    </div>
-                    <div className="pt-6">
-                      <Link href={`/produto/${p.id}`} className="btn-primary w-full text-center py-4">Ver Produto</Link>
+                      <div className="mt-4 pt-3 px-3 border-t border-black/10 grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <Link href={`/produto/${p.id}`} className="btn-secondary-dark w-full text-center py-1.5 px-3 bg-[#f2f3f5] hover:bg-[#edeff2] border border-black/10 text-sm">Detalhes</Link>
+                        <Link href={`/produto/${p.id}`} className="btn-primary w-full py-1.5 px-3 text-sm">Ver Produto</Link>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           {/* CTA principal com design melhorado */}
-          <div className="text-center mt-20 animate-slide-up">
-            <Link href="/catalogo" className="btn-primary px-16 py-5 text-lg font-medium hover:scale-105 transition-transform duration-300">
+          <div className="text-center mt-12 sm:mt-16 animate-slide-up">
+            <Link href="/catalogo" className="btn-primary px-12 py-4 text-base font-medium hover:scale-105 transition-transform duration-300">
               Ver Todos os Produtos
             </Link>
           </div>
         </div>
       </section>
+
+      {/* Banner Promocional - Componente Dinâmico */}
+      <PromotionalBanner
+        title="Até 40% de desconto"
+        subtitle="Coleção Outono"
+        description="Descubra peças exclusivas com caimento perfeito. Envio grátis para Portugal em pedidos acima de 50€."
+        primaryButtonText="Ver Ofertas"
+        primaryButtonLink="/catalogo"
+        secondaryButtonText="Falar com Especialista"
+        secondaryButtonLink="/contato"
+        badgeText="🎉 OFERTA ESPECIAL"
+        imageSrc="/banner-outono-2025.png"
+        imageAlt="Coleção Outono 2025 - Moda Feminina Elegante"
+        discount="40%"
+        highlightColor="amber"
+      />
 
       {/* Seção de benefícios como Vellum - Layout melhorado */}
       <section className="py-24 section-3d-aurum section-aurum-glow">

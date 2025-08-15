@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from '@/lib/db';
 import fs from 'fs/promises';
 import path from 'path';
+import { createClient } from '@supabase/supabase-js';
 
 // usando instância compartilhada de prisma de '@/lib/db'
 
@@ -120,12 +121,54 @@ export async function GET(req: NextRequest) {
       return name;
     };
 
-    // Se o banco estiver vazio, servir fallback usando o manifest local
+    // Se o banco estiver vazio, tentar buscar do Supabase (REST) e, por fim, servir manifest local
     if (!products || products.length === 0) {
+      try {
+        const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
+        const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+        if (SUPABASE_URL && SERVICE_ROLE_KEY) {
+          const sb = createClient(SUPABASE_URL, SERVICE_ROLE_KEY);
+          const { data: rows } = await sb.from('products')
+            .select('slug,name,description,short_description,price,regular_price,featured')
+            .limit(50);
+          if (Array.isArray(rows) && rows.length) {
+            const nowIso = new Date().toISOString();
+            const supaProducts = rows.map((r: any) => {
+              const slug: string = String(r.slug || '');
+              const m = slug.match(/produto-(\d+)/i);
+              const pid = m ? m[1] : slug || String(Math.random()).slice(2);
+              const imgs = (manifestImages[pid] || []).map((src: string) => ({ src }));
+              return {
+                id: pid,
+                name: r.name || `Produto ${pid}`,
+                slug: pid,
+                description: r.description || '',
+                short_description: r.short_description || '',
+                price: Number(r.price || 0),
+                compare_at_price: Number(r.regular_price || 0),
+                images: imgs,
+                category: 'Coleção',
+                stock: 0,
+                available: true,
+                featured: Boolean(r.featured),
+                variants: [],
+                created_at: nowIso,
+                updated_at: nowIso,
+              };
+            });
+            return new NextResponse(JSON.stringify({ products: supaProducts }), {
+              headers: {
+                'Content-Type': 'application/json',
+                'Cache-Control': 'public, max-age=60, s-maxage=120, stale-while-revalidate=300'
+              }
+            });
+          }
+        }
+      } catch {}
       const nowIso = new Date().toISOString();
       const fallbackProducts = Object.entries(manifestImages).map(([pid, imgs]) => ({
         id: pid,
-        name: `Peça ${pid}`,
+        name: `Produto ${pid}`,
         slug: pid,
         description: '',
         short_description: '',
@@ -238,7 +281,61 @@ export async function GET(req: NextRequest) {
     });
   } catch (error) {
     console.error('Erro ao buscar produtos:', error);
-    // Fallback em caso de erro: tentar manifest local
+    // Fallback em caso de erro: tentar Supabase (REST) e, por fim, manifest local
+    try {
+      const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
+      const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+      if (SUPABASE_URL && SERVICE_ROLE_KEY) {
+        const sb = createClient(SUPABASE_URL, SERVICE_ROLE_KEY);
+        const { data: rows } = await sb.from('products')
+          .select('slug,name,description,short_description,price,regular_price,featured')
+          .limit(50);
+        if (Array.isArray(rows) && rows.length) {
+          const manifestPath = path.join(process.cwd(), 'public', 'produtos', 'manifest.json');
+          let manifestImages: Record<string, string[]> = {};
+          try {
+            const raw = await fs.readFile(manifestPath, 'utf-8');
+            const parsed: any = JSON.parse(raw || '{}');
+            if (parsed && typeof parsed === 'object') {
+              for (const [key, value] of Object.entries(parsed)) {
+                if (Array.isArray(value)) manifestImages[String(key)] = value as string[];
+                else if (value && typeof value === 'object' && Array.isArray((value as any).images)) {
+                  manifestImages[String(key)] = (value as any).images as string[];
+                }
+              }
+            }
+          } catch {}
+          const nowIso = new Date().toISOString();
+          const supaProducts = rows.map((r: any) => {
+            const slug: string = String(r.slug || '');
+            const m = slug.match(/produto-(\d+)/i);
+            const pid = m ? m[1] : slug || String(Math.random()).slice(2);
+            const imgs = (manifestImages[pid] || []).map((src: string) => ({ src }));
+            return {
+              id: pid,
+              name: r.name || `Produto ${pid}`,
+              slug: pid,
+              description: r.description || '',
+              short_description: r.short_description || '',
+              price: Number(r.price || 0),
+              compare_at_price: Number(r.regular_price || 0),
+              images: imgs,
+              category: 'Coleção',
+              stock: 0,
+              available: true,
+              featured: Boolean(r.featured),
+              variants: [],
+              created_at: nowIso,
+              updated_at: nowIso,
+            };
+          });
+          return new NextResponse(JSON.stringify({ products: supaProducts }), {
+            headers: { 'Content-Type': 'application/json' }
+          });
+        }
+      }
+    } catch {}
+    // Manifest final
     try {
       const manifestPath = path.join(process.cwd(), 'public', 'produtos', 'manifest.json');
       const raw = await fs.readFile(manifestPath, 'utf-8');
@@ -255,7 +352,7 @@ export async function GET(req: NextRequest) {
       const nowIso = new Date().toISOString();
       const fallbackProducts = Object.entries(manifestImages).map(([pid, imgs]) => ({
         id: pid,
-        name: `Peça ${pid}`,
+        name: `Produto ${pid}`,
         slug: pid,
         description: '',
         short_description: '',

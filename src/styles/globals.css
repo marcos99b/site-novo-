@@ -736,7 +736,7 @@ section, .card-elegant, .hero-elegant, .products-grid, .max-w-7xl, .max-w-6xl, .
   filter: blur(14px);
 }
 
-/* Brilho dourado sutil para texto curto (ex.: “elegante e atemporal”) */
+/* Brilho dourado sutil para texto curto (ex.: "elegante e atemporal") */
 .glow-aurum {
   position: relative;
   text-shadow:
@@ -1309,6 +1309,14 @@ p { line-height: 1.7; }
   -webkit-backdrop-filter: blur(6px);
   transition: background .2s ease, color .2s ease, border-color .2s ease, transform .2s ease;
 }
+.chip-tech { width: auto; }
+@media (min-width: 640px) {
+  .chip-tech { padding: 6px 12px; font-size: 0.8rem; --cut: 8px; }
+  .chip-tech.is-active::before { left: 12px; right: 12px; }
+}
+@media (min-width: 1024px) {
+  .chip-tech { padding: 5px 10px; font-size: 0.78rem; --cut: 8px; }
+}
 .chip-tech:hover { background: rgba(255,255,255,0.09); transform: translateY(-1px); }
 .chip-tech:focus { outline: none; box-shadow: 0 0 0 2px rgba(232,215,168,0.24); }
 .chip-tech.is-active {
@@ -1483,5 +1491,104 @@ p { line-height: 1.7; }
 .tilt-3d-inner img {
   transition: transform 450ms cubic-bezier(.22,1,.36,1);
   transform: translate3d(calc(var(--px, 0) * 8px), calc(var(--py, 0) * 8px), 0) scale(1.06);
+}
+
+/* ====== GALERIA 3D CINEMATOGRÁFICA ====== */
+/* Esconder scrollbars em diferentes navegadores */
+.gallery-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.gallery-scroll {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Efeitos 3D para a galeria */
+.gallery-3d {
+  perspective: 1000px;
+  transform-style: preserve-3d;
+}
+
+.gallery-3d-item {
+  transition: all 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transform-style: preserve-3d;
+}
+
+.gallery-3d-item:hover {
+  transform: translateZ(20px) rotateX(2deg) rotateY(2deg);
+}
+
+/* Efeito de brilho 3D */
+.glow-3d {
+  position: relative;
+  overflow: hidden;
+}
+
+.glow-3d::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  transform: rotate(45deg) translateX(-100%);
+  transition: transform 0.8s ease;
+}
+
+.glow-3d:hover::before {
+  transform: rotate(45deg) translateX(100%);
+}
+
+/* Sombra 3D dinâmica */
+.shadow-3d {
+  box-shadow: 
+    0 10px 30px rgba(0, 0, 0, 0.1),
+    0 1px 8px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.5s ease;
+}
+
+.shadow-3d:hover {
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.15),
+    0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Efeito de profundidade para miniaturas */
+.thumbnail-3d {
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transform-style: preserve-3d;
+}
+
+.thumbnail-3d:hover {
+  transform: translateZ(10px) scale(1.05);
+}
+
+/* Badge 3D com efeito de profundidade */
+.badge-3d {
+  position: relative;
+  transform-style: preserve-3d;
+}
+
+.badge-3d::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(45deg, rgba(255,255,255,0.3), transparent);
+  border-radius: inherit;
+  transform: translateZ(-1px);
+  filter: blur(4px);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.badge-3d:hover::before {
+  opacity: 1;
 }
 

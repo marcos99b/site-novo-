@@ -48,3 +48,4 @@ say "Se encontrar a linha completa, copie a sk_test_/sk_live_ e eu salvo no .env
 
 
 
+

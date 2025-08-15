@@ -51,3 +51,4 @@ async function removerImagensAntigas() {
 // Executar
 removerImagensAntigas();
 
+
