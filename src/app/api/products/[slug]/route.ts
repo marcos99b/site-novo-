@@ -12,9 +12,9 @@ export async function GET(
   try {
     const productSlug = params.slug;
 
-    // Buscar produto no banco por slug
+    // Buscar produto no banco por ID (fallback para slug)
     const product = await prisma.product.findUnique({
-      where: { slug: productSlug },
+      where: { id: productSlug },
       include: {
         variants: true
       }
