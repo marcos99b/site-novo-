@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  // 🚀 Otimizações de Performance
+  // 🚀 Otimizações básicas de Performance
   swcMinify: true,
   compress: true,
   poweredByHeader: false,
@@ -12,7 +12,6 @@ const nextConfig = {
     ],
     unoptimized: false,
     formats: ['image/avif', 'image/webp'],
-    // 🎯 Otimizações de imagem
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 31536000, // 1 ano
@@ -23,45 +22,7 @@ const nextConfig = {
   experimental: {
     serverActions: {
       bodySizeLimit: '2mb'
-    },
-    // 🚀 Otimizações experimentais ULTRA para LCP, TTI e JavaScript
-    optimizeCss: true,
-    optimizePackageImports: ['@/components', 'react', 'react-dom', 'three'],
-    turbo: {
-      rules: {
-        '*.svg': {
-          loaders: ['@svgr/webpack'],
-          as: '*.js',
-        },
-        // 🚀 Otimizações para JavaScript
-        '*.tsx': {
-          loaders: ['@swc/loader'],
-          as: '*.js',
-        },
-        // 🚀 Otimizações para imagens
-        '*.jpg': {
-          loaders: ['@next/image-loader'],
-          as: '*.webp',
-        },
-        '*.png': {
-          loaders: ['@next/image-loader'],
-          as: '*.webp',
-        },
-      },
-    },
-    // 🎯 Otimizações de performance EXTREMA
-    optimizeServerReact: true,
-    webVitalsAttribution: ['CLS', 'LCP', 'TTI', 'FCP'],
-    // 🚀 Otimizações para JavaScript e 3D
-    optimizePackageImports: ['@/components', 'react', 'react-dom', 'three'],
-    // 🚀 Otimizações para imagens críticas
-    optimizeImages: false, // Desabilitado para evitar conflitos
-    // 🚀 Otimizações para fontes
-    optimizeFonts: false, // Desabilitado para evitar conflitos
-    // 🚀 Otimizações para JavaScript
-    optimizeJavaScript: true,
-    // 🚀 Otimizações para LCP
-    optimizeLCP: true,
+    }
   },
   // 🔒 Content Security Policy para Stripe
   async headers() {

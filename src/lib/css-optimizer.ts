@@ -143,7 +143,9 @@ export const optimizeFCP = () => {
   // 🚀 Remover CSS não crítico
   const nonCriticalStyles = document.querySelectorAll('link[rel="stylesheet"]:not([data-critical])');
   nonCriticalStyles.forEach(style => {
-    style.media = 'print';
+    if (style instanceof HTMLLinkElement) {
+      style.media = 'print';
+    }
   });
 };
 

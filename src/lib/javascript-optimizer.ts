@@ -15,7 +15,7 @@ export const optimizeEventListeners = () => {
   };
 
   // 🚀 Throttle para eventos de resize
-  let resizeTimeout: NodeJS.Timeout;
+  let resizeTimeout: NodeJS.Timeout | null = null;
   const optimizedResizeHandler = () => {
     if (resizeTimeout) return;
     resizeTimeout = setTimeout(() => {

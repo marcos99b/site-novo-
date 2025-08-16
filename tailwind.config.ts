@@ -27,8 +27,6 @@ const config: Config = {
   // 🚀 Otimizações para LCP e TTI
   experimental: {
     optimizeUniversalDefaults: true,
-    // 🚀 Otimizações para CSS crítico
-    optimizeCss: true,
   },
 };
 export default config;
