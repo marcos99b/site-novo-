@@ -1,88 +1,106 @@
-import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET(req: NextRequest) {
-  try {
-    // Por enquanto, retornar dados mockados até resolver a tabela
-    const mockLeads = [
-      {
-        id: '1',
-        email: 'cliente1@exemplo.com',
-        name: 'Cliente Exemplo 1',
-        phone: '+55 11 99999-9999',
-        source: 'website',
-        status: 'new',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      },
-      {
-        id: '2',
-        email: 'cliente2@exemplo.com',
-        name: 'Cliente Exemplo 2',
-        phone: '+55 11 88888-8888',
-        source: 'social',
-        status: 'contacted',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
-      }
-    ];
-    
-    return NextResponse.json({ 
-      success: true, 
-      leads: mockLeads 
-    });
-  } catch (error) {
-    console.error("Erro ao buscar leads:", error);
-    return NextResponse.json(
-      { 
-        success: false, 
-        error: "Erro ao buscar leads",
-        details: error instanceof Error ? error.message : 'Erro desconhecido'
-      },
-      { status: 500 }
-    );
-  }
+// Sistema de CRM ULTRA MEGA RÁPIDO (100% offline)
+interface Lead {
+  id: string;
+  email: string;
+  name?: string;
+  phone?: string;
+  category: string;
+  source: string;
+  status: 'new' | 'contacted' | 'converted' | 'lost';
+  interests: string[];
+  createdAt: string;
+  lastContacted?: string;
+  notes?: string;
 }
+
+// Armazenamento em memória para demonstração (em produção seria um banco real)
+let leads: Lead[] = [];
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
-    const { email, name, phone, source = "website", notes } = body;
+    const { email, name, phone, category = 'Geral', source = 'website', interests = [] } = await req.json();
 
     if (!email) {
-      return NextResponse.json(
-        { success: false, error: "Email é obrigatório" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: 'Email é obrigatório' }, { status: 400 });
     }
 
-    // Por enquanto, simular criação de lead
-    const mockLead = {
-      id: Date.now().toString(),
+    // Verificar se o lead já existe
+    const existingLead = leads.find(lead => lead.email === email);
+    
+    if (existingLead) {
+      // Atualizar lead existente
+      existingLead.lastContacted = new Date().toISOString();
+      existingLead.interests = [...new Set([...existingLead.interests, ...interests])];
+      existingLead.status = 'contacted';
+      
+      return NextResponse.json({ 
+        success: true, 
+        message: 'Lead atualizado com sucesso',
+        lead: existingLead 
+      });
+    }
+
+    // Criar novo lead
+    const newLead: Lead = {
+      id: `lead_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
       email,
       name,
       phone,
+      category,
       source,
-      notes,
-      status: "new",
+      status: 'new',
+      interests,
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      notes: `Lead capturado via ${source}`
     };
+
+    leads.push(newLead);
+
+    // Simular integração com sistema de email marketing
+    console.log(`🎯 NOVO LEAD CAPTURADO: ${email} - ${category}`);
 
     return NextResponse.json({ 
       success: true, 
-      lead: mockLead,
-      message: "Lead criado com sucesso"
+      message: 'Lead registrado com sucesso',
+      lead: newLead 
     });
+
   } catch (error) {
-    console.error("Erro ao criar lead:", error);
-    return NextResponse.json(
-      { 
-        success: false, 
-        error: "Erro ao criar lead",
-        details: error instanceof Error ? error.message : 'Erro desconhecido'
-      },
-      { status: 500 }
-    );
+    console.error('Erro ao registrar lead:', error);
+    return NextResponse.json({ 
+      error: 'Erro interno do servidor' 
+    }, { status: 500 });
+  }
+}
+
+export async function GET(req: NextRequest) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const status = searchParams.get('status');
+    const category = searchParams.get('category');
+
+    let filteredLeads = leads;
+
+    if (status) {
+      filteredLeads = filteredLeads.filter(lead => lead.status === status);
+    }
+
+    if (category) {
+      filteredLeads = filteredLeads.filter(lead => lead.category === category);
+    }
+
+    return NextResponse.json({ 
+      leads: filteredLeads,
+      total: filteredLeads.length,
+      performance: 'ULTRA_MEGA_FAST_CRM'
+    });
+
+  } catch (error) {
+    console.error('Erro ao buscar leads:', error);
+    return NextResponse.json({ 
+      error: 'Erro interno do servidor' 
+    }, { status: 500 });
   }
 }

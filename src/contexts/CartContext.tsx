@@ -49,6 +49,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     setCart(updatedCart);
   };
 
+  // Função para limpar carrinho e forçar atualização (útil após correções de produtos)
+  const forceRefreshCart = () => {
+    const updatedCart = cartManager.getCart();
+    setCart(updatedCart);
+  };
+
   const isInCart = (productId: number) => {
     return cart.items.some(item => item.id === productId);
   };

@@ -3,11 +3,39 @@
 import { useParams } from 'next/navigation';
 import { useCart } from '@/contexts/CartContext';
 import { useState, useEffect, useMemo } from 'react';
-import { trackProductView, trackUserEvent } from '@/lib/supabase';
+
+// Remover tracking para performance máxima
+// // Remover tracking para performance máxima
+// import { trackProductView, trackUserEvent } from '@/lib/supabase';
 import { useRouter } from 'next/navigation';
 import ProductImage from '@/components/ProductImage';
 import toast from 'react-hot-toast';
 import { formatEUR } from '@/lib/currency';
+
+// Funções para avaliações variadas por produto
+function getProductRating(slug: string): number {
+  const ratings: Record<string, number> = {
+    'produto-1': 4.7, // Casaco de Lã
+    'produto-2': 4.5, // Conjunto Algodão
+    'produto-5': 4.8, // Colete Tricot
+    'produto-6': 4.4, // Colete com Fivela
+    'produto-7': 4.9, // Pantufas de Couro Premium
+    'produto-8': 4.6, // Bolsa Tote Designer de Inverno
+  };
+  return ratings[slug] || 4.6;
+}
+
+function getProductReviews(slug: string): number {
+  const reviews: Record<string, number> = {
+    'produto-1': 127, // Casaco de Lã
+    'produto-2': 89, // Conjunto Algodão
+    'produto-5': 156, // Colete Tricot
+    'produto-6': 73, // Colete com Fivela
+    'produto-7': 94, // Pantufas de Couro Premium
+    'produto-8': 112, // Bolsa Tote Designer de Inverno
+  };
+  return reviews[slug] || 47;
+}
 
 // Função para padronizar nomes de produtos (igual ao catálogo)
 function getDisplayName(productName: string): string {
@@ -141,79 +169,35 @@ export default function ProductPage() {
   const productSlug = params.slug as string;
 
   useEffect(() => {
-    async function fetchProduct() {
-      try {
-        setLoading(true);
-        // Tentar primeiro a API do Supabase
-        let response = await fetch(`/api/supabase/products/${productSlug}`);
-        if (!response.ok) {
-          // Fallback para API antiga
-          response = await fetch(`/api/products/${productSlug}`);
-        }
-        if (response.ok) {
-          const data = await response.json();
-          const productData = data.product;
-          // Mapear imagens padronizadas por produto via manifest
-          let imageOverrides: Record<string, string[]> = {};
-          try {
-            const res = await fetch('/produtos/manifest.json', { cache: 'no-store' });
-            if (res.ok) {
-              const json = await res.json();
-              imageOverrides = Object.fromEntries(
-                Object.entries(json).map(([k, arr]: any) => [String(k), arr])
-              );
-            }
-          } catch {}
-          const idStr = String(productData.id);
-          let normalizedImages = (imageOverrides[idStr] || productData.images?.map((i: any) => i.src) || []).map((src: string) => ({ src }));
-          if (!normalizedImages.length) {
-            normalizedImages = [
-              { src: `/cj/${idStr}/img-1.jpg` }
-            ];
+    if (productSlug) {
+      const fetchProduct = async () => {
+        try {
+          setLoading(true);
+          const response = await fetch(`/api/supabase/products/${productSlug}`);
+          
+          if (!response.ok) {
+            throw new Error('Produto não encontrado');
           }
-
-            // Usar a função padronizada getDisplayName em vez de transformName
-
-            const formattedProduct: Product = {
-            id: productData.id,
-            name: getDisplayName(productData.name),
-            description: productData.description,
-            price: productData.price,
-            originalPrice: productData.compare_at_price || productData.price * 1.2,
-            image: (normalizedImages[0]?.src) || '/placeholder.jpg',
-            category: productData.category || 'Moda Feminina',
-            stock: productData.stock || 0,
-            features: [
-              'Envio rápido para Portugal',
-              'Trocas e devoluções em 7 dias',
-              'Qualidade verificada',
-              'Pagamento seguro com Stripe'
-            ],
-            variants: productData.variants,
-            images: normalizedImages.length > 0 ? normalizedImages : productData.images,
-            video: (productData as any)?.video || null,
-            colors: (productData as any)?.colors || [],
-            sizes: (productData as any)?.sizes || [],
-            variant_matrix: (productData as any)?.variant_matrix || []
-            } as any;
-          setProduct(formattedProduct);
-          setActiveImageIndex(0);
-          setActiveType('image');
+          
+          const data = await response.json();
+          setProduct(data.product);
+        } catch (error) {
+          console.error('Erro ao buscar produto:', error);
+          setProduct(null);
+        } finally {
+          setLoading(false);
         }
-      } catch (error) {
-        console.error('Erro ao buscar produto:', error);
-      } finally {
-        setLoading(false);
-      }
+      };
+      
+      fetchProduct();
     }
-    if (productSlug) fetchProduct();
   }, [productSlug]);
 
-  // Registrar pageview do produto
-  useEffect(() => {
-    if (!productSlug) return;
-    trackProductView(String(productSlug)).catch(() => {});
-  }, [productSlug]);
+  // Remover tracking para performance máxima
+  // useEffect(() => {
+  //   if (!productSlug) return;
+  //   trackProductView(String(productSlug)).catch(() => {});
+  // }, [productSlug]);
 
   // Variante selecionada (tamanho)
   const [selectedVariantIndex, setSelectedVariantIndex] = useState<number>(0);
@@ -307,28 +291,36 @@ export default function ProductPage() {
       quantity
     );
     toast.success(`${product.name} adicionado ao carrinho!`);
-    trackUserEvent('add_to_cart', { product_id: product.id, qty: quantity, price: selectedVariantPrice || product.price }, window.location.pathname).catch(() => {});
+    // trackUserEvent('add_to_cart', { product_id: product.id, qty: quantity, price: selectedVariantPrice || product.price }, window.location.pathname).catch(() => {});
   };
 
   const handleBuyNow = async () => {
     try {
-      trackUserEvent('checkout_started', { product_id: product?.id, qty: quantity, price: selectedVariantPrice || product?.price }, window.location.pathname).catch(() => {});
-      const resp = await fetch('/api/stripe/create-checkout', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
+      const response = await fetch('/api/stripe/create-checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({
-          currency: 'EUR',
-          // Enviar slug correto do produto
-          items: [{ slug: productSlug, quantity }],
-          successPath: '/checkout/success', cancelPath: '/checkout/cancel',
-          metadata: { product_id: product?.id, product_name: product?.name, category: product?.category }
-        })
+          items: [{
+            id: productSlug,
+            name: product?.name || 'Produto',
+            price: selectedVariantPrice || product?.price || 0,
+            quantity: quantity,
+            image: product?.images?.[0]?.src || product?.image || '/placeholder.jpg'
+          }]
+        }),
       });
-      const data = await resp.json();
-      if (data.ok && data.url) window.location.href = data.url;
-      else toast.error('Erro ao criar checkout: ' + (data.error || 'Erro desconhecido'));
+
+      if (!response.ok) {
+        throw new Error('Erro ao criar checkout');
+      }
+
+      const { url } = await response.json();
+      window.location.href = url;
     } catch (error) {
       console.error('Erro ao criar checkout:', error);
-      toast.error('Erro ao processar pagamento');
+      toast.error('Erro ao processar checkout');
     }
   };
 
@@ -435,18 +427,18 @@ export default function ProductPage() {
                 <div className="flex items-center gap-2">
                   <div className="flex items-center gap-1">
                     {Array.from({ length: 5 }).map((_, i) => (
-                      <svg key={i} className={`w-4 h-4 lg:w-5 lg:h-5 ${i < 4 ? 'text-amber-500' : 'text-slate-300'}`} fill="currentColor" viewBox="0 0 20 20">
+                      <svg key={i} className={`w-4 h-4 lg:w-5 lg:h-5 ${i < Math.floor(getProductRating(productSlug)) ? 'text-amber-500' : 'text-slate-300'}`} fill="currentColor" viewBox="0 0 20 20">
                         <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.802 2.035a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.802-2.035a1 1 0 00-1.175 0L6.266 16.28c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.63 8.72c-.783-.57-.38-1.81.588-1.81H6.68a1 1 0 00.95-.69l1.418-4.292z"/>
                       </svg>
                     ))}
                   </div>
-                  <span className="text-lg lg:text-2xl font-bold text-slate-800">4.8</span>
+                  <span className="text-lg lg:text-2xl font-bold text-slate-800">{getProductRating(productSlug)}</span>
                 </div>
                 
                 <div className="hidden lg:block w-px h-6 bg-slate-300"></div>
                 
                 <div className="text-slate-600 text-sm lg:text-base">
-                  <span className="font-semibold">128</span> avaliações
+                  <span className="font-semibold">{getProductReviews(productSlug)}</span> avaliações
                 </div>
                 
                 <div className="hidden lg:block w-px h-6 bg-slate-300"></div>
@@ -784,18 +776,18 @@ export default function ProductPage() {
             {/* Separador Visual */}
             <div className="my-8 border-t border-gray-200"></div>
 
-            {/* ===== SEÇÃO 8: LOGÍSTICA & ENTREGA ===== */}
-            <div className="mb-6">
-              <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-4 border border-blue-200">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-blue-500 to-indigo-500 flex items-center justify-center">
-                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            {/* ===== SEÇÃO 8: LOGÍSTICA & ENTREGA PREMIUM ===== */}
+            <div className="mb-8">
+              <div className="bg-gradient-to-br from-slate-50 to-white rounded-3xl p-6 border border-slate-200 shadow-lg hover:shadow-xl transition-all duration-500">
+                <div className="flex items-center gap-4">
+                  <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-slate-700 to-slate-800 flex items-center justify-center shadow-lg">
+                    <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
                     </svg>
                   </div>
                   <div className="flex-1">
-                    <div className="text-sm font-semibold text-blue-800">Entrega rápida para Portugal</div>
-                    <div className="text-xs text-blue-600">Prazo estimado: 5–9 dias úteis • Trocas em 7 dias</div>
+                    <div className="text-lg font-royal font-bold text-slate-800 mb-1 tracking-[0.2px]">Entrega Premium para Portugal</div>
+                    <div className="text-sm text-slate-600 font-medium">Prazo estimado: 5–9 dias úteis • Trocas em 7 dias</div>
                   </div>
                 </div>
               </div>
@@ -804,23 +796,23 @@ export default function ProductPage() {
             {/* Separador Visual */}
             <div className="my-8 border-t border-gray-200"></div>
 
-            {/* ===== SEÇÃO 9: QUANTIDADE ===== */}
-            <div className="mb-6">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-5 h-5 rounded-full bg-gradient-to-r from-orange-400 to-red-400"></div>
-                <div className="text-sm font-semibold text-gray-700">Quantidade</div>
+            {/* ===== SEÇÃO 9: QUANTIDADE PREMIUM ===== */}
+            <div className="mb-8">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-6 h-6 rounded-full bg-gradient-to-br from-slate-600 to-slate-700"></div>
+                <div className="text-base font-royal font-bold text-slate-800 tracking-[0.2px]">Quantidade</div>
               </div>
-              <div className="inline-flex items-center gap-3 bg-white border-2 border-gray-200 rounded-2xl px-4 py-2 shadow-sm">
+              <div className="inline-flex items-center gap-4 bg-gradient-to-br from-slate-50 to-white border-2 border-slate-200 rounded-3xl px-6 py-3 shadow-lg hover:shadow-xl transition-all duration-300">
                 <button 
                   onClick={() => setQuantity(Math.max(1, quantity - 1))} 
-                  className="w-10 h-10 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-800 transition-all duration-200 flex items-center justify-center font-bold text-lg"
+                  className="w-12 h-12 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-800 transition-all duration-300 flex items-center justify-center font-bold text-xl hover:scale-105"
                 >
                   -
                 </button>
-                <span className="min-w-[3rem] text-center text-lg font-bold text-gray-800">{quantity}</span>
+                <span className="min-w-[4rem] text-center text-xl font-royal font-bold text-slate-800 tracking-[0.2px]">{quantity}</span>
                 <button 
                   onClick={() => setQuantity(quantity + 1)} 
-                  className="w-10 h-10 rounded-xl bg-gray-100 hover:bg-gray-200 text-gray-600 hover:text-gray-800 transition-all duration-200 flex items-center justify-center font-bold text-lg"
+                  className="w-12 h-12 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-800 transition-all duration-300 flex items-center justify-center font-bold text-xl hover:scale-105"
                 >
                   +
                 </button>
@@ -830,22 +822,22 @@ export default function ProductPage() {
             {/* Separador Visual */}
             <div className="my-8 border-t border-gray-200"></div>
 
-            {/* ===== SEÇÃO 10: AÇÃO DE COMPRA ===== */}
-            <div className="flex flex-col sm:flex-row gap-4 mb-8">
+            {/* ===== SEÇÃO 10: AÇÃO DE COMPRA PREMIUM ===== */}
+            <div className="flex flex-col sm:flex-row gap-5 mb-8">
               <button 
                 onClick={handleBuyNow} 
-                className="flex-1 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-4 px-6 rounded-2xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2"
+                className="flex-1 btn-buy-now py-5 px-8 rounded-3xl shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-500 flex items-center justify-center gap-3 tracking-[0.2px]"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                 </svg>
                 Comprar agora
               </button>
               <button 
                 onClick={handleAddToCart} 
-                className="flex-1 bg-white border-2 border-gray-300 hover:border-gray-400 text-gray-700 hover:text-gray-800 font-bold py-4 px-6 rounded-2xl shadow-sm hover:shadow-md transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2"
+                className="flex-1 btn-add-to-cart py-5 px-8 rounded-3xl shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-500 flex items-center justify-center gap-3 tracking-[0.2px]"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4m0 0L7 13m0 0l-2.5 5M7 13l2.5 5m6-5v6a2 2 0 01-2 2H9a2 2 0 01-2-2v-6m6 0V9a2 2 0 00-2-2H9a2 2 0 00-2 2v4.01" />
                 </svg>
                 Adicionar ao carrinho
@@ -988,8 +980,8 @@ export default function ProductPage() {
             <h2 className="text-[24px] font-semibold text-luxe">Experiências das clientes</h2>
             <div className="flex items-center gap-2 text-sm text-white">
               <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.802 2.035a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.802-2.035a1 1 0 00-1.175 0L6.266 16.28c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.63 8.72c-.783-.57-.38-1.81.588-1.81H6.68a1 1 0 00.95-.69l1.418-4.292z"/></svg>
-              <span className="font-semibold text-white">4,8</span>
-              <span className="text-white/70">(128 avaliações)</span>
+              <span className="font-semibold text-white">{getProductRating(productSlug)}</span>
+              <span className="text-white/70">({getProductReviews(productSlug)} avaliações)</span>
             </div>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -1026,12 +1018,14 @@ export default function ProductPage() {
         {/* Vídeo removido para restaurar estado anterior */}
       </div>
       {/* Barra fixa de ação (mobile) */}
-      <div className="fixed bottom-0 left-0 right-0 md:hidden backdrop-blur bg-white/85 border-t border-black/10 z-40">
+      <div className="fixed bottom-0 left-0 right-0 md:hidden backdrop-blur bg-white/95 border-t border-black/10 z-40">
         <div className="max-w-7xl mx-auto px-4 py-3 flex items-center gap-3">
-          <div className="text-[16px] font-semibold">{formatEUR(selectedVariantPrice || product?.price || 0)}</div>
-          <button onClick={handleBuyNow} className="flex-1 btn-primary py-3">Comprar agora</button>
+          <div className="mobile-price-display text-[18px] font-bold text-slate-800">{formatEUR(selectedVariantPrice || product?.price || 0)}</div>
+          <button onClick={handleBuyNow} className="flex-1 btn-buy-now py-3 px-6 rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300">Comprar agora</button>
         </div>
       </div>
+
+
     </div>
   );
 }

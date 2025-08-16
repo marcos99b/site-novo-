@@ -1,0 +1,162 @@
+import Link from 'next/link';
+import { formatEUR } from '@/lib/currency';
+
+export default function CatalogoPage() {
+  return (
+    <div className="relative">
+      {/* Hero elegante */}
+      <div className="relative min-h-[36vh] sm:min-h-[50vh] flex items-center pt-4 sm:pt-0 hero-spot">
+        <div className="absolute inset-0" />
+        <div className="relative z-10 max-w-5xl mx-auto px-6 w-full">
+          <div className="text-center space-y-3 sm:space-y-6">
+            <h1 className="text-4xl lg:text-5xl font-light heading-aurum-3d underline-aurum mb-6">
+              Catálogo Completo
+            </h1>
+            <p className="text-xl text-luxe-subtitle max-w-3xl mx-auto leading-relaxed">
+              Descubra nossa coleção completa de peças elegantes e atemporais.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-4 sm:pt-12 pb-10 sm:pb-16">
+        {/* Grid de produtos */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
+          {/* Produto 1 - Casaco de Lã Clássico */}
+          <div className="group">
+            <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-105">
+              <Link href="/produto/produto-1" className="block">
+                <div className="relative aspect-[4/5] overflow-hidden">
+                  <img 
+                    src="/produtos/produto-1/1.jpg"
+                    alt="Casaco de Lã Clássico"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                  <div className="absolute top-2 left-2 flex gap-2">
+                    <span className="text-white text-[11px] px-2 py-1 rounded font-medium bg-emerald-600">
+                      ✨ New
+                    </span>
+                  </div>
+                </div>
+              </Link>
+              <div className="p-4">
+                <h3 className="text-sm font-medium text-gray-900 mb-2 text-center">Casaco de Lã Clássico</h3>
+                <div className="flex items-center gap-3 mb-3 justify-center">
+                  <span className="text-lg font-semibold text-gray-900">€89.90</span>
+                  <span className="text-sm text-gray-500 line-through">€120.00</span>
+                </div>
+                <Link
+                  href="/produto/produto-1"
+                  className="w-full bg-gray-800 text-white py-2 px-4 rounded-lg hover:bg-gray-700 transition-colors duration-200 text-center block"
+                >
+                  Ver Produto
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Produto 2 - Conjunto Algodão & Linho */}
+          <div className="group">
+            <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-105">
+              <Link href="/produto/produto-2" className="block">
+                <div className="relative aspect-[4/5] overflow-hidden">
+                  <img 
+                    src="/produtos/produto-2/2.jpg"
+                    alt="Conjunto Algodão & Linho"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                  <div className="absolute top-2 left-2 flex gap-2">
+                    <span className="text-white text-[11px] px-2 py-1 rounded font-medium bg-blue-600">
+                      🔥 Trend
+                    </span>
+                  </div>
+                </div>
+              </Link>
+              <div className="p-4">
+                <h3 className="text-sm font-medium text-gray-900 mb-2 text-center">Conjunto Algodão & Linho</h3>
+                <div className="flex items-center gap-3 mb-3 justify-center">
+                  <span className="text-lg font-semibold text-gray-900">€79.90</span>
+                  <span className="text-sm text-gray-500 line-through">€100.00</span>
+                </div>
+                <Link
+                  href="/produto/produto-2"
+                  className="w-full bg-gray-800 text-white py-2 px-4 rounded-lg hover:bg-gray-700 transition-colors duration-200 text-center block"
+                >
+                  Ver Produto
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Produto 3 - Colete Tricot Decote V */}
+          <div className="group">
+            <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-105">
+              <Link href="/produto/produto-5" className="block">
+                <div className="relative aspect-[4/5] overflow-hidden">
+                  <img 
+                    src="/produtos/produto-5/1.jpg"
+                    alt="Colete Tricot Decote V"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                  <div className="absolute top-2 left-2 flex gap-2">
+                    <span className="text-white text-[11px] px-2 py-1 rounded font-medium bg-purple-600">
+                      ⭐ Premium
+                    </span>
+                  </div>
+                </div>
+              </Link>
+              <div className="p-4">
+                <h3 className="text-sm font-medium text-gray-900 mb-2 text-center">Colete Tricot Decote V</h3>
+                <div className="flex items-center gap-3 mb-3 justify-center">
+                  <span className="text-lg font-semibold text-gray-900">€44.90</span>
+                  <span className="text-sm text-gray-500 line-through">€60.00</span>
+                </div>
+                <Link
+                  href="/produto/produto-5"
+                  className="w-full bg-gray-800 text-white py-2 px-4 rounded-lg hover:bg-gray-700 transition-colors duration-200 text-center block"
+                >
+                  Ver Produto
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Produto 4 - Colete com Fivela */}
+          <div className="group">
+            <div className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 hover:scale-105">
+              <Link href="/produto/produto-6" className="block">
+                <div className="relative aspect-[4/5] overflow-hidden">
+                  <img 
+                    src="/produtos/produto-6/1.jpg"
+                    alt="Colete com Fivela"
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                  <div className="absolute top-2 left-2 flex gap-2">
+                    <span className="text-white text-[11px] px-2 py-1 rounded font-medium bg-amber-600">
+                      🌟 Latest
+                    </span>
+                  </div>
+                </div>
+              </Link>
+              <div className="p-4">
+                <h3 className="text-sm font-medium text-gray-900 mb-2 text-center">Colete com Fivela</h3>
+                <div className="flex items-center gap-3 mb-3 justify-center">
+                  <span className="text-lg font-semibold text-gray-900">€45.90</span>
+                  <span className="text-sm text-gray-500 line-through">€65.00</span>
+                </div>
+                <Link
+                  href="/produto/produto-6"
+                  className="w-full bg-gray-800 text-white py-2 px-4 rounded-lg hover:bg-gray-700 transition-colors duration-200 text-center block"
+                >
+                  Ver Produto
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+

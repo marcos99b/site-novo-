@@ -42,6 +42,26 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode; }) {
   return (
     <html lang="pt-PT">
+      <head>
+        {/* 🚀 Preload Crítico para LCP */}
+        <link 
+          rel="preload" 
+          href="/colecao-outono/optimized/hero-1.jpg" 
+          as="image" 
+          fetchPriority="high"
+          imageSizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        />
+        <link 
+          rel="preload" 
+          href="/colecao-outono/optimized/hero-2.jpg" 
+          as="image" 
+          fetchPriority="high"
+          imageSizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        />
+        {/* 🚀 DNS Prefetch para Recursos Externos */}
+        <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+        <link rel="dns-prefetch" href="//fonts.gstatic.com" />
+      </head>
       <body className={`${inter.className} ${poppins.variable} min-h-screen app-bg`}>
         <ParallaxBackground />
         <FacebookPixel pixelId={process.env.NEXT_PUBLIC_FACEBOOK_PIXEL_ID || '123456789'} />

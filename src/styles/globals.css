@@ -266,6 +266,7 @@ body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
   -webkit-font-smoothing: antialiased; 
   -moz-osx-font-smoothing: grayscale; 
+  font-feature-settings: "liga" 1, "kern" 1, "calt" 1, "ss01" 1;
   /* Camadas: gradiente base + spotlights frios + vinheta */
   background:
     radial-gradient(120% 120% at 50% 50%, rgba(0,0,0,0) 56%, rgba(0,0,0,0.22) 100%),
@@ -408,6 +409,41 @@ body::before {
 }
 .btn-primary:hover { transform: translateY(-2px); filter: brightness(1.04); }
 .btn-primary:active { transform: translateY(0); filter: brightness(0.98); }
+
+/* CTA de compra padronizado - cinza uniforme */
+.btn-buy-now {
+  background: linear-gradient(135deg, #64748b, #475569 50%, #334155 100%);
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
+  border: 1px solid rgba(255,255,255,0.06);
+  box-shadow: 0 10px 24px rgba(100,116,139,0.28), inset 0 1px 0 rgba(255,255,255,0.15);
+}
+.btn-buy-now:hover { transform: translateY(-2px); filter: brightness(1.04); }
+.btn-buy-now:active { transform: translateY(0); filter: brightness(0.98); }
+
+/* Botão secundário padronizado - branco com borda */
+.btn-add-to-cart {
+  background: linear-gradient(135deg, #f8fafc, #ffffff 50%, #f1f5f9 100%);
+  color: #475569;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease, color .2s ease;
+  border: 2px solid #cbd5e1;
+  box-shadow: 0 6px 16px rgba(100,116,139,0.08), inset 0 1px 0 rgba(255,255,255,0.8);
+}
+.btn-add-to-cart:hover { 
+  transform: translateY(-2px); 
+  border-color: #94a3b8;
+  color: #334155;
+  box-shadow: 0 10px 24px rgba(100,116,139,0.12), inset 0 1px 0 rgba(255,255,255,0.9);
+}
+.btn-add-to-cart:active { transform: translateY(0); }
 
 .btn-secondary {
   background: rgba(255,255,255,0.08);
@@ -1590,5 +1626,150 @@ p { line-height: 1.7; }
 
 .badge-3d:hover::before {
   opacity: 1;
+}
+
+/* Efeitos 3D Avançados - Interface Tipo iPhone/Mac */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.transform-gpu {
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.hover\:rotate-y-1:hover {
+  transform: rotateY(1deg) translateZ(0);
+}
+
+.hover\:rotate-y-2:hover {
+  transform: rotateY(2deg) translateZ(0);
+}
+
+.hover\:-rotate-y-1:hover {
+  transform: rotateY(-1deg) translateZ(0);
+}
+
+.hover\:-rotate-y-2:hover {
+  transform: rotateY(-2deg) translateZ(0);
+}
+
+/* Efeitos de profundidade sutil */
+.product-card-3d {
+  transform: translateZ(0);
+  transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.product-card-3d:hover {
+  transform: translateZ(20px) rotateY(2deg);
+  box-shadow: 
+    0 25px 50px -12px rgba(0, 0, 0, 0.25),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+/* Animações suaves para badges */
+.badge-3d {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateZ(0);
+}
+
+.badge-3d:hover {
+  transform: translateZ(10px) scale(1.1);
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3));
+}
+
+/* Efeitos de hover para botões */
+.btn-3d {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateZ(0);
+}
+
+.btn-3d:hover {
+  transform: translateZ(5px) scale(1.05);
+  box-shadow: 
+    0 10px 25px -5px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+/* Transições suaves para imagens */
+.img-3d {
+  transition: all 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateZ(0);
+}
+
+.img-3d:hover {
+  transform: translateZ(10px) scale(1.1);
+}
+
+/* Efeitos de profundidade para cards */
+.card-depth {
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: translateZ(0);
+}
+
+.card-depth:hover {
+  transform: translateZ(15px);
+  box-shadow: 
+    0 20px 40px -10px rgba(0, 0, 0, 0.3),
+    0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+/* Animações de entrada suaves */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px) translateZ(0);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) translateZ(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Efeitos de glassmorphism sutil */
+.glass-effect {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* Transições para todos os elementos interativos */
+* {
+  transition-property: transform, box-shadow, opacity, filter;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Otimizações de performance */
+.gpu-accelerated {
+  transform: translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
+}
+
+/* Garantir que nomes de produtos não sejam cortados */
+.product-name {
+  overflow: visible !important;
+  text-overflow: unset !important;
+  white-space: normal !important;
+  word-break: break-word !important;
+  line-height: 1.2 !important;
+}
+
+/* Garantir que preços na barra mobile sejam sempre visíveis */
+.mobile-price-display {
+  overflow: visible !important;
+  text-overflow: unset !important;
+  white-space: nowrap !important;
+  word-break: keep-all !important;
+  min-width: 90px !important;
+  text-align: center !important;
 }
 
